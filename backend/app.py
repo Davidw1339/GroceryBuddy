@@ -13,7 +13,7 @@ def use_db():
     names = mongoclient.grocerybuddy.test_names
     if request.method == 'GET':
         name = names.find_one(sort=[('_id', pymongo.DESCENDING)])['name']
-        return 'Hello, ' + name + '!\n'
+        return name
     elif request.method == 'POST':
         new_name = request.args['name']
         names.insert_one({'name': new_name})
