@@ -1,9 +1,14 @@
 from flask import Flask, request
-import pymongo
+import json
+import model
+import config
 
 app = Flask(__name__)
-mongoclient = pymongo.MongoClient(
-    'mongodb://admin:password123@ds058508.mlab.com:58508/grocerybuddy')
+app.config['MONGODB_SETTINGS'] = {
+    'db': 'grocery-db',
+    'host': config.mongo_host
+}
+model.db.init_app(app)
 
 
 @app.route('/')
@@ -11,16 +16,33 @@ def hello_world():
     return 'Hello, Grocery buddies!'
 
 
-@app.route('/testdb', methods=['GET', 'POST'])
-def use_db():
-    names = mongoclient.grocerybuddy.test_names
-    if request.method == 'GET':
-        name = names.find_one(sort=[('_id', pymongo.DESCENDING)])['name']
-        return name
-    elif request.method == 'POST':
-        new_name = request.args['name']
-        names.insert_one({'name': new_name})
-        return 'Name saved\n'
+@app.route('/item', methods=['POST'])
+def post_item():
+    data = request.get_json(force=True)
+
+    new_price = model.Price(
+        user=data['user'],
+        upvote=0,
+        downvote=0,
+        price=data['price'],
+        date=request.date
+    )
+    new_store = model.Store(
+        name=data['store'],
+        location={
+            'lat': data['lat'],
+            'long': data['long']
+        },
+        price=[new_price]
+    )
+    new_item = model.Item(
+        upc=data['upc'],
+        name=data['name'],
+        stores=[new_store]
+    )
+    new_item.save()
+
+    return json.dumps({'success': True, 'error': None})
 
 
 if __name__ == '__main__':
