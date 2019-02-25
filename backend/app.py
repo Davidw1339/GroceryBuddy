@@ -58,5 +58,12 @@ def post_item():
     return json.dumps({'success': True, 'error': None})
 
 
+@app.route('/search', methods=['GET'])
+def get_by_keyword():
+    keyword = request.args.get('keyword')
+
+    return model.Item.objects(name=keyword).to_json()
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
