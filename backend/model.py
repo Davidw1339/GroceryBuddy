@@ -10,13 +10,11 @@ class Price(EmbeddedDocument):
     date = DateTimeField()
 
 
-
 class Store(EmbeddedDocument):
     name = StringField(min_length=1, max_length=64)
     location = DictField()
     location.validate = validation.validate_location
     price = EmbeddedDocumentListField(Price)
-
 
 
 class Item(Document):
@@ -25,4 +23,3 @@ class Item(Document):
     upc.validate = validation.validate_upc
     name = StringField(min_length=1, max_length=64)
     stores = EmbeddedDocumentListField(Store)
-

@@ -1,17 +1,13 @@
 from flask import Flask, request
 import json
 import model
-import config
 import validation
 from mongoengine import connect
+from os import environ
 
 app = Flask(__name__)
-app.config['MONGODB_SETTINGS'] = {
-    'db': 'grocery-db',
-    'host': config.mongo_host
-}
 
-connect(app.config['MONGODB_SETTINGS']['db'], host=config.mongo_host)
+connect('grocery-db', host=environ['MONGO_HOST'])
 
 
 @app.route('/')
