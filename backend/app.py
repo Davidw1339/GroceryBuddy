@@ -3,13 +3,15 @@ import json
 import model
 import config
 import validation
+from mongoengine import connect
 
 app = Flask(__name__)
 app.config['MONGODB_SETTINGS'] = {
     'db': 'grocery-db',
     'host': config.mongo_host
 }
-model.db.init_app(app)
+
+connect(app.config['MONGODB_SETTINGS']['db'], host=config.mongo_host)
 
 
 @app.route('/')
