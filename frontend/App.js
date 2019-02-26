@@ -1,67 +1,44 @@
 import React from 'react';
-import { ActivityIndicator, Text, TextInput, Button, View, StyleSheet } from 'react-native';
-import fetch from 'node-fetch'
+import { Font } from 'expo';
+import { ActivityIndicator, StyleSheet, Text, View, YellowBox } from 'react-native';
+import Navigator from './pages/Navigator';
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { isLoading: true }
+  state = {
+    fontsAreLoaded: false,
   }
 
-  refreshPrice = () => {
-    ROUTE_URL = 'http://grocerybuddybackend.azurewebsites.net/testdb'
-    BODY_KEY = '_bodyText'
-    return fetch(ROUTE_URL)
-      .then((response) => {
-        this.setState({
-          isLoading: false,
-          dynamicText: response[BODY_KEY]
-        })
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+  async componentWillMount() {
+    YellowBox.ignoreWarnings(['Require cycle:']);
+    await Font.loadAsync({
+      'Rubik-Black': require('./node_modules/@shoutem/ui/fonts/Rubik-Black.ttf'),
+      'Rubik-BlackItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-BlackItalic.ttf'),
+      'Rubik-Bold': require('./node_modules/@shoutem/ui/fonts/Rubik-Bold.ttf'),
+      'Rubik-BoldItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-BoldItalic.ttf'),
+      'Rubik-Italic': require('./node_modules/@shoutem/ui/fonts/Rubik-Italic.ttf'),
+      'Rubik-Light': require('./node_modules/@shoutem/ui/fonts/Rubik-Light.ttf'),
+      'Rubik-LightItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-LightItalic.ttf'),
+      'Rubik-Medium': require('./node_modules/@shoutem/ui/fonts/Rubik-Medium.ttf'),
+      'Rubik-MediumItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-MediumItalic.ttf'),
+      'Rubik-Regular': require('./node_modules/@shoutem/ui/fonts/Rubik-Regular.ttf'),
+      'rubicon-icon-font': require('./node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf'),
+    });
 
-  componentDidMount() {
-    this.refreshPrice();
+    this.setState({ fontsAreLoaded: true });
   }
-
-  // Takes the current value of the input field and submits it to the database
-  submitPrice = () => {
-    ROUTE_URL = 'http://grocerybuddybackend.azurewebsites.net/testdb?name=' + this.state.textInput
-    return fetch(ROUTE_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then(response => {
-      this.setState({
-        textInput: ''
-      });
-      this.refreshPrice();
-    })
-    .catch((error) => {
-      console.error(error);
-    })
-  }
-
+   
   render() {
-    if (this.state.isLoading) {
+    if (!this.state.fontsAreLoaded) {
       return (
         <View style={styles.container}>
-          <ActivityIndicator />
+          <ActivityIndicator size={"large"}/>
+          <Text>Waiting for fonts</Text>
         </View>
       )
     }
 
     return (
-      <View style={styles.container}>
-        <Text>Price of apples: {this.state.dynamicText}</Text>
-        <TextInput style={styles.input} onChangeText={(textInput) => this.setState({textInput})} value={this.state.textInput}/>
-        <Button onPress={this.submitPrice} title="Submit Price"/>
-      </View>
+      <Navigator/>
     );
   }
 }
@@ -69,17 +46,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
-  },
-  input: {
-    height: 40,
-    width: 200,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 10,
-    padding: 5
+    alignItems: 'center'
   }
-});
+})

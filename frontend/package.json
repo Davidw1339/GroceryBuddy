@@ -8,19 +8,22 @@
     "test": "jest --updateSnapshot"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "jest-expo"
   },
   "dependencies": {
+    "@shoutem/ui": "^0.23.12",
     "expo": "^32.0.0",
     "jest": "^24.1.0",
     "node-fetch": "^2.3.0",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-navigation": "^3.3.2",
     "react-test-renderer": "^16.8.1",
     "yarn": "^1.13.0"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0"
+    "babel-preset-expo": "^5.0.0",
+    "jest-expo": "^32.0.0"
   },
   "private": true
 }
