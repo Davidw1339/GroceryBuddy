@@ -41,3 +41,11 @@ export const addGroceryItem = (formData) => {
         console.log(error);
     })
 }
+
+export const searchForItem = (keyword) => {
+    const ROUTE = '/search?keyword=' + keyword
+    console.log('we are searching');
+    return fetch(BACKEND_URL + ROUTE, {
+        method: "GET"
+    }).then(res => res.json());
+}
