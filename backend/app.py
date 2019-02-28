@@ -17,12 +17,12 @@ def hello_world():
 
 @app.route('/item', methods=['POST'])
 def post_item():
-    """
+    '''
         Body: {"name", "upc", "price", "user", "store", "lat", "long"}
         Response:
             - {"success": true or false},
             - {"error": error description}
-    """
+    '''
     data = request.get_json(force=True)
 
     required_fields = ['name', 'upc', 'price', 'user', 'store', 'lat', 'long']
@@ -42,7 +42,7 @@ def post_item():
             'lat': data['lat'],
             'long': data['long']
         },
-        price=[new_price]
+        prices=[new_price]
     )
     new_item = model.Item(
         upc=data['upc'],

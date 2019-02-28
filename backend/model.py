@@ -14,7 +14,7 @@ class Store(EmbeddedDocument):
     name = StringField(min_length=1, max_length=64)
     location = DictField()
     location.validate = validation.validate_location
-    price = EmbeddedDocumentListField(Price)
+    prices = EmbeddedDocumentListField(Price)
 
 
 class Item(Document):

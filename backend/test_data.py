@@ -128,7 +128,7 @@ store0 = model.Store(
         'lat': 0,
         'long': 0
     },
-    price=[price0, price1]
+    prices=[price0, price1]
 )
 
 # valid
@@ -138,7 +138,7 @@ store1 = model.Store(
         'lat': 0,
         'long': 0
     },
-    price=valid_prices
+    prices=valid_prices
 )
 
 # valid
@@ -148,7 +148,7 @@ store2 = model.Store(
         'lat': 0,
         'long': 0
     },
-    price=random.shuffle(valid_prices)
+    prices=random.shuffle(valid_prices)
 )
 
 # valid
@@ -158,7 +158,7 @@ store3 = model.Store(
         'lat': 0,
         'long': 0
     },
-    price=[
+    prices=[
         price0,
         price2,
         price1,
@@ -180,7 +180,7 @@ store4 = model.Store(
         'lat': 0,
         'long': 0
     },
-    price=[
+    prices=[
         price1,
         price3,
         price0,
@@ -196,7 +196,7 @@ store5 = model.Store(
         'lat': 1000,
         'long': 0
     },
-    price=[
+    prices=[
         price1,
         price3,
     ]
@@ -209,7 +209,7 @@ store6 = model.Store(
         'lat': 0,
         'long': 1000
     },
-    price=[
+    prices=[
         price2,
         price0,
     ]
@@ -223,7 +223,7 @@ store7 = model.Store(
         'lat': 0,
         'rand': None
     },
-    price=[
+    prices=[
         price1,
         price4,
     ]
@@ -236,14 +236,14 @@ store8 = model.Store(
         'lat': 0,
         'long': 0
     },
-    price=invalid_prices
+    prices=invalid_prices
 )
 
 # empty fields
 store9 = model.Store(
     name=None,
     location=None,
-    price=None
+    prices=None
 )
 
 invalid_stores = [
