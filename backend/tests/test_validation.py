@@ -1,14 +1,11 @@
-import validation
-
-
-# Location test
+from validation import *
 
 def test_valid_location():
     loc = {
         'lat': 0,
         'long': 0
     }
-    validation.validate_location(loc)
+    validate_location(loc)
 
 
 def test_valid_location_edge_lat():
@@ -16,7 +13,7 @@ def test_valid_location_edge_lat():
         'lat': 90,
         'long': 0
     }
-    validation.validate_location(loc)
+    validate_location(loc)
 
 
 def test_valid_location_edge_long():
@@ -24,7 +21,7 @@ def test_valid_location_edge_long():
         'lat': 0,
         'long': 180
     }
-    validation.validate_location(loc)
+    validate_location(loc)
 
 
 def test_invalid_location_too_many_fields():
@@ -33,20 +30,22 @@ def test_invalid_location_too_many_fields():
         'long': 0,
         'extra': 'peilun'
     }
+    err_msg = None
     try:
-        validation.validate_location(loc)
-        assert False
-    except:
-        pass
+        validate_location(loc)
+    except LocationValidationException as e:
+        err_msg=  e.__str__()
+    assert err_msg == LocationValidationException.INCORRECT_FIELD_ERROR
 
 
 def test_invalid_location_not_enough_fields():
     loc = {}
+    err_msg = None
     try:
-        validation.validate_location(loc)
-        assert False
-    except:
-        pass
+        validate_location(loc)
+    except LocationValidationException as e:
+        err_msg = e.__str__()
+    assert err_msg == LocationValidationException.INCORRECT_FIELD_ERROR
 
 
 def test_invalid_location_lat():
@@ -54,11 +53,12 @@ def test_invalid_location_lat():
         'lat': 1000,
         'long': 0
     }
+    err_msg = None
     try:
-        validation.validate_location(loc)
-        assert False
-    except:
-        pass
+        validate_location(loc)
+    except LocationValidationException as e:
+         err_msg = e.__str__()
+    assert err_msg == LocationValidationException.INVALID_LAT_VALUE_ERROR
 
 
 def test_invalid_location_long():
@@ -66,62 +66,68 @@ def test_invalid_location_long():
         'lat': 0,
         'long': 1000
     }
+    err_msg = None
     try:
-        validation.validate_location(loc)
-        assert False
-    except:
-        pass
+        validate_location(loc)
+    except LocationValidationException as e:
+        err_msg = e.__str__()
+    assert err_msg == LocationValidationException.INVALID_LONG_VALUE_ERROR
 
 
 # UPC test
 def test_valid_upc():
     upc = '000000000000'
-    validation.validate_upc(upc)
+    validate_upc(upc)
 
 
 def test_invalid_upc_too_long():
     upc = '1234567890123'
+    err_msg = None
     try:
-        validation.validate_upc(upc)
-        assert False
-    except:
-        pass
+        validate_upc(upc)
+    except UpcValidationException as e:
+        err_msg = e.__str__()
+    assert err_msg == UpcValidationException.INCORRECT_LENGTH_ERROR
 
 
 def test_invalid_upc_too_short():
     upc = '123'
+    err_msg = None
     try:
-        validation.validate_upc(upc)
-        assert False
-    except:
-        pass
+        validate_upc(upc)
+    except UpcValidationException as e:
+        err_msg = e.__str__()
+    assert err_msg == UpcValidationException.INCORRECT_LENGTH_ERROR
 
 
 def test_invalid_upc_lowercase():
     upc = '00000000000a'
+    err_msg = None
     try:
-        validation.validate_upc(upc)
-        assert False
-    except:
-        pass
+        validate_upc(upc)
+    except UpcValidationException as e:
+        err_msg = e.__str__()
+    assert err_msg == UpcValidationException.NOT_DIGITS_ERROR
 
 
 def test_invalid_upc_uppercase():
     upc = '00000000000A'
+    err_msg = None
     try:
-        validation.validate_upc(upc)
-        assert False
-    except:
-        pass
+        validate_upc(upc)
+    except UpcValidationException as e:
+        err_msg = e.__str__()
+    assert err_msg == UpcValidationException.NOT_DIGITS_ERROR
 
 
 def test_invalid_upc_special():
     upc = '!@#$%^&*()_+'
+    err_msg = None
     try:
-        validation.validate_upc(upc)
-        assert False
-    except:
-        pass
+        validate_upc(upc)
+    except UpcValidationException as e:
+        err_msg = e.__str__()
+    assert err_msg == UpcValidationException.NOT_DIGITS_ERROR
 
 
 required_fields = ['name', 'upc', 'price', 'user', 'store', 'lat', 'long']
@@ -137,7 +143,7 @@ def test_valid_has_required():
         'lat': None,
         'long': None
     }
-    assert validation.has_required(data, required_fields)
+    assert has_required(data, required_fields)
 
 
 def test_valid_has_required():
@@ -151,9 +157,9 @@ def test_valid_has_required():
         'long': None,
         'extra': None
     }
-    assert validation.has_required(data, required_fields)
+    assert has_required(data, required_fields)
 
 
 def test_invalid_has_required():
     data = {}
-    assert not validation.has_required(data, required_fields)
+    assert not has_required(data, required_fields)

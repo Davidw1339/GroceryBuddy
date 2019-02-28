@@ -1,25 +1,46 @@
+class LocationValidationException(Exception):
+    INCORRECT_FIELD_ERROR = 'Incorrect Amount of Fields'
+    MISSING_LAT_FIELD_ERROR = 'Missing lat field'
+    MISSING_LONG_FIELD_ERROR = 'Missing long field'
+    INVALID_LAT_VALUE_ERROR = 'Invalid lat value'
+    INVALID_LONG_VALUE_ERROR = 'Invalid long value'
+    UNKNOWN_EXCEPTION = 'Invalid location format'
+
+    def __init__(self, message):
+        super().__init__(message)
+
+
+class UpcValidationException(Exception):
+    NOT_DIGITS_ERROR = 'Upc must be digits'
+    INCORRECT_LENGTH_ERROR = 'Upc must have length 12'
+
+    def __init__(self, message):
+        super().__init__(message)
+
 
 
 # location must have a lat in the range [-90,90] and a long in the range [-180,180]
 def validate_location(loc):
-    try:
-        if len(loc) != 2:
-            raise Exception()
-        if 'lat' not in loc or 'long' not in loc:
-            raise Exception()
-        if loc['lat'] < -90 or loc['lat'] > 90 or loc['long'] < -180 or loc['long'] > 180:
-            raise Exception()
-    except Exception:
-        raise Exception('Invalid location format')
+    if len(loc) != 2:
+        raise LocationValidationException(LocationValidationException.INCORRECT_FIELD_ERROR)
+    if 'lat' not in loc:
+        raise LocationValidationException(LocationValidationException.MISSING_LAT_FIELD_ERROR)
+    if 'long' not in loc:
+        raise LocationValidationException(LocationValidationException.MISSING_LONG_FIELD_ERROR)
+    if loc['lat'] < -90 or loc['lat'] > 90:
+        raise LocationValidationException(LocationValidationException.INVALID_LAT_VALUE_ERROR)
+    if loc['long'] < -180 or loc['long'] > 180:
+        raise LocationValidationException(LocationValidationException.INVALID_LONG_VALUE_ERROR)
+
+
 
 
 # upc code must consist of 12 digits
 def validate_upc(upc):
-    try:
-        if len(upc) != 12 or not upc.isdigit():
-            raise Exception()
-    except Exception:
-        raise Exception('Invalid upc code')
+    if not upc.isdigit():
+        raise UpcValidationException(UpcValidationException.NOT_DIGITS_ERROR)
+    if len(upc) != 12:
+        raise UpcValidationException(UpcValidationException.INCORRECT_LENGTH_ERROR)
 
 
 # checks for the existence of all fields
