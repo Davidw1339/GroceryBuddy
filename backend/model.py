@@ -7,7 +7,7 @@ class Price(EmbeddedDocument):
     upvote = IntField(min_value=0)
     downvote = IntField(min_value=0)
     price = DecimalField(min_value=0, precision=2)
-    date = DateTimeField()
+    date = DecimalField(min_value=0, precision=6)
 
 
 class Store(EmbeddedDocument):

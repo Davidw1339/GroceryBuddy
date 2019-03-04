@@ -9,7 +9,7 @@ price0 = model.Price(
     upvote=10,
     downvote=5,
     price=1.99,
-    date=datetime.now()
+    date=datetime.now().timestamp()
 )
 
 # valid
@@ -18,7 +18,7 @@ price1 = model.Price(
     upvote=7,
     downvote=4,
     price=0.99,
-    date=datetime.now()
+    date=datetime.now().timestamp()
 )
 
 # valid
@@ -27,7 +27,7 @@ price2 = model.Price(
     upvote=0,
     downvote=0,
     price=0.00,
-    date=datetime.now()
+    date=datetime.now().timestamp()
 )
 
 # valid
@@ -36,7 +36,7 @@ price3 = model.Price(
     upvote=200,
     downvote=1000,
     price=139.99,
-    date=datetime.now()
+    date=datetime.now().timestamp()
 )
 
 # valid
@@ -45,7 +45,7 @@ price4 = model.Price(
     upvote=20,
     downvote=19,
     price=12.89,
-    date=datetime.now()
+    date=datetime.now().timestamp()
 )
 
 # array of valid prices
@@ -63,7 +63,7 @@ price5 = model.Price(
     upvote=10,
     downvote=5,
     price=1.99,
-    date=datetime.now()
+    date=datetime.now().timestamp()
 )
 
 # upvote: negative upvote
@@ -72,7 +72,7 @@ price6 = model.Price(
     upvote=-7,
     downvote=4,
     price=0.99,
-    date=datetime.now()
+    date=datetime.now().timestamp()
 )
 
 # downvote: negative downvote
@@ -81,7 +81,7 @@ price7 = model.Price(
     upvote=0,
     downvote=-1,
     price=0.00,
-    date=datetime.now()
+    date=datetime.now().timestamp()
 )
 
 # price: negative price
@@ -90,7 +90,7 @@ price8 = model.Price(
     upvote=200,
     downvote=1000,
     price=-139.99,
-    date=datetime.now()
+    date=datetime.now().timestamp()
 )
 
 # none fields
@@ -99,7 +99,7 @@ price9 = model.Price(
     upvote=None,
     downvote=None,
     price=None,
-    date=datetime.now()
+    date=datetime.now().timestamp()
 )
 
 # price: too many digits in cents
@@ -108,7 +108,7 @@ price10 = model.Price(
     upvote=200,
     downvote=100,
     price=19.999,
-    date=datetime.now()
+    date=datetime.now().timestamp()
 )
 
 # array of invalid prices

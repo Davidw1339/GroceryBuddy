@@ -4,6 +4,7 @@ import model
 import validation
 from mongoengine import connect
 from os import environ
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -34,7 +35,7 @@ def post_item():
         upvote=0,
         downvote=0,
         price=data['price'],
-        date=request.date
+        date=datetime.now().timestamp()
     )
     new_store = model.Store(
         name=data['store'],
@@ -52,7 +53,7 @@ def post_item():
 
     try:
         new_item.save()
-    except Exception as e:
+    except validation.ValidationException as e:
         return json.dumps({'success': False, 'error': str(e)})
 
     return json.dumps({'success': True, 'error': None})
@@ -67,7 +68,7 @@ def get_by_keyword():
     elif keyword:
         return model.Item.objects(name__icontains=keyword).to_json()
     else:
-        return json.dumps({'success': False, 'error':'Request does not contain keyword or upc code'})
+        return json.dumps({'success': False, 'error': 'Request does not contain keyword or upc code'})
 
 
 if __name__ == '__main__':
