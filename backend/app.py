@@ -60,9 +60,14 @@ def post_item():
 
 @app.route('/search', methods=['GET'])
 def get_by_keyword():
+    upc = request.args.get('upc')
     keyword = request.args.get('keyword')
-
-    return model.Item.objects(name=keyword).to_json()
+    if upc:
+        return model.Item.objects(upc=upc).to_json()
+    elif keyword:
+        return model.Item.objects(name__icontains=keyword).to_json()
+    else:
+        return json.dumps({'success': False, 'error':'Request does not contain keyword or upc code'})
 
 
 if __name__ == '__main__':
