@@ -62,3 +62,10 @@ def has_required(data, required):
             return False
 
     return True
+
+
+def is_valid_dir(dir):
+    '''
+    Ensures that vote direction is -1, 0, or 1
+    '''
+    return -1 <= dir and dir <= 1

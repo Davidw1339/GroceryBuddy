@@ -1,6 +1,7 @@
 import model
 from mongoengine import connect
 from test_data import valid_items, invalid_items
+import copy
 
 connect('mongoenginetest', host='mongomock://localhost')
 
@@ -11,9 +12,9 @@ def test_model_loads():
 
 def test_valid_items():
     for item in valid_items:
-        item.save()
+        copy.deepcopy(item).save()
     result = model.Item.objects()
-    assert len(result) == 2
+    assert len(result) == len(valid_items)
 
 
 def test_invalid_items():

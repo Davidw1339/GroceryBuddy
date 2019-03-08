@@ -1,11 +1,11 @@
-from mongoengine import EmbeddedDocument, StringField, IntField, DecimalField, DateTimeField, DictField, EmbeddedDocumentListField, Document
+from mongoengine import EmbeddedDocument, StringField, IntField, DecimalField, DateTimeField, DictField, ListField, EmbeddedDocumentListField, Document
 import validation
 
 
 class Price(EmbeddedDocument):
     user = StringField(min_length=1, max_length=64)
-    upvote = IntField(min_value=0)
-    downvote = IntField(min_value=0)
+    upvotes = ListField(StringField(min_length=1, max_length=64))
+    downvotes = ListField(StringField(min_length=1, max_length=64))
     price = DecimalField(min_value=0, precision=2)
     date = DecimalField(min_value=0, precision=6)
 
