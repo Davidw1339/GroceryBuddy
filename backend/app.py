@@ -32,11 +32,6 @@ class Vote(Enum):
 
 app = Flask(__name__)
 
-try:
-    connect('grocery-db', host=environ['MONGO_HOST'])
-except KeyError:
-    pass
-
 
 @app.route('/')
 def hello_world():
@@ -203,4 +198,5 @@ def get_by_keyword():
 
 
 if __name__ == '__main__':
+    connect('grocery-db', host=environ['MONGO_HOST'])
     app.run(host='0.0.0.0', port=80)
