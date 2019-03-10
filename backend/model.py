@@ -22,4 +22,5 @@ class Item(Document):
     upc = StringField(max_length=12, min_length=12)
     upc.validate = validation.validate_upc
     name = StringField(min_length=1, max_length=64)
+    image_url = StringField(min_length=0, max_length=512)
     stores = EmbeddedDocumentListField(Store)

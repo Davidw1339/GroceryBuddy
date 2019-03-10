@@ -41,7 +41,7 @@ def hello_world():
 @app.route('/item', methods=['POST'])
 def post_item():
     '''
-        Body: {"name", "upc", "price", "user", "store", "lat", "long"}
+        Body: {"name", "upc", "price", "user", "store", "lat", "long"[, "image_url"]}
         Response:
             - {"success": true or false},
             - {"error": error description}
@@ -51,6 +51,11 @@ def post_item():
     required_fields = ['name', 'upc', 'price', 'user', 'store', 'lat', 'long']
     if not validation.has_required(data, required_fields):
         return json.dumps({'success': False, 'error': Error.MISSING_FIELDS.value})
+
+    if 'image_url' in data:
+        image_url = data['image_url']
+    else:
+        image_url = ''
 
     new_price = model.Price(
         user=data['user'],
@@ -70,6 +75,7 @@ def post_item():
     new_item = model.Item(
         upc=data['upc'],
         name=data['name'],
+        image_url=image_url,
         stores=[new_store]
     )
 
