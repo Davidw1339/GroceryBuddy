@@ -3,6 +3,7 @@ import json
 import model
 import validation
 from mongoengine import connect
+import mongoengine.errors
 from os import environ
 from datetime import datetime
 from enum import Enum
@@ -86,7 +87,7 @@ def post_item():
 
     try:
         new_item.save()
-    except validation.ValidationException as e:
+    except (validation.ValidationException, mongoengine.errors.ValidationError) as e:
         return json.dumps({'success': False, 'error': str(e)})
 
     return json.dumps({'success': True, 'error': None})
@@ -132,7 +133,7 @@ def add_price():
 
     try:
         item.save()
-    except Exception as e:
+    except (validation.ValidationException, mongoengine.errors.ValidationError) as e:
         return json.dumps({'success': False, 'error': str(e)})
 
     return json.dumps({'success': True, 'error': None})
@@ -190,7 +191,7 @@ def vote():
 
     try:
         item.save()
-    except Exception as e:
+    except (validation.ValidationException, mongoengine.errors.ValidationError) as e:
         return json.dumps({'success': False, 'error': str(e)})
 
     return json.dumps({'success': True, 'error': None})
