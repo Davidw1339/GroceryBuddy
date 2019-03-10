@@ -1,5 +1,6 @@
 import pytest
 from mongoengine import connect
+from mongoengine.connection import disconnect
 import app
 import model
 import copy
@@ -8,6 +9,7 @@ import test_data
 
 @pytest.fixture
 def db():
+    disconnect()
     connect('mongoenginetest', host='mongomock://localhost')
     model.Item.objects().delete()
     yield None
