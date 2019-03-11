@@ -277,9 +277,23 @@ item1 = model.Item(
     stores=random.sample(valid_stores, k=len(valid_stores))
 )
 
+item6 = model.Item(
+    name='testItem1',
+    upc='042100005265',
+    stores=valid_stores[0:3]
+)
+
+item7 = model.Item(
+    name='testItem2',
+    upc='042100005266',
+    stores=valid_stores[1:3]
+)
+
 valid_items = [
     item0,
     item1,
+    item6,
+    item7
 ]
 
 # name: too many characters
