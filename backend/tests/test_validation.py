@@ -1,4 +1,5 @@
 from validation import *
+import pytest
 
 def test_valid_location():
     loc = {
@@ -128,6 +129,16 @@ def test_invalid_upc_special():
     except UpcValidationException as e:
         err_msg = e.__str__()
     assert err_msg == UpcValidationException.NOT_DIGITS_ERROR
+
+
+def test_upc_exists(existing_item):
+    upc = str(existing_item.upc)
+    assert validate_unique_upc(upc) is False
+
+
+def test_upc_does_not_exist(nonexistent_item):
+    upc = str(nonexistent_item.upc)
+    assert validate_unique_upc(upc) is True
 
 
 required_fields = ['name', 'upc', 'price', 'user', 'store', 'lat', 'long']

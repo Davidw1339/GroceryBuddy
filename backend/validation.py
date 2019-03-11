@@ -1,3 +1,6 @@
+import model
+
+
 class ValidationException(Exception):
     '''
     Abstract class for all validation exceptions
@@ -69,3 +72,10 @@ def is_valid_dir(dir):
     Ensures that vote direction is -1, 0, or 1
     '''
     return -1 <= dir and dir <= 1
+
+
+def validate_unique_upc(upc):
+    items = model.Item.objects(upc=upc)
+    if len(items) == 0:
+        return True
+    return False
