@@ -1,6 +1,4 @@
 import model
-import random
-import string
 from datetime import datetime
 
 
@@ -17,7 +15,7 @@ price0 = model.Price(
     upvotes=users(10),
     downvotes=users(5, 10),
     price=1.99,
-    date=datetime.now().timestamp()
+    date=datetime(2019, 3, 10, 11, 30, 12).timestamp()
 )
 
 # valid
@@ -26,7 +24,7 @@ price1 = model.Price(
     upvotes=users(7),
     downvotes=users(4, 7),
     price=0.99,
-    date=datetime.now().timestamp()
+    date=datetime(2019, 3, 10, 11, 30, 42).timestamp()
 )
 
 # valid
@@ -35,7 +33,7 @@ price2 = model.Price(
     upvotes=[],
     downvotes=[],
     price=0.00,
-    date=datetime.now().timestamp()
+    date=datetime(2019, 3, 10, 11, 31, 22).timestamp()
 )
 
 # valid
@@ -44,7 +42,7 @@ price3 = model.Price(
     upvotes=users(200),
     downvotes=users(1000, 200),
     price=139.99,
-    date=datetime.now().timestamp()
+    date=datetime(2019, 3, 10, 11, 31, 52).timestamp()
 )
 
 # valid
@@ -53,7 +51,7 @@ price4 = model.Price(
     upvotes=users(20),
     downvotes=users(19, 20),
     price=12.89,
-    date=datetime.now().timestamp()
+    date=datetime(2019, 3, 10, 12, 30, 12).timestamp()
 )
 
 # valid
@@ -62,7 +60,7 @@ price9 = model.Price(
     upvotes=[],
     downvotes=[],
     price=4.95,
-    date=datetime.now().timestamp()
+    date=datetime(2019, 3, 10, 12, 30, 32).timestamp()
 )
 
 # array of valid prices
@@ -81,7 +79,7 @@ price5 = model.Price(
     upvotes=users(10),
     downvotes=users(5, 10),
     price=1.99,
-    date=datetime.now().timestamp()
+    date=datetime(2019, 3, 9, 11, 30, 12).timestamp()
 )
 
 # price: negative price
@@ -90,7 +88,7 @@ price6 = model.Price(
     upvotes=users(200),
     downvotes=users(1000, 200),
     price=-139.99,
-    date=datetime.now().timestamp()
+    date=datetime(2019, 3, 8, 11, 30, 12).timestamp()
 )
 
 # none fields
@@ -99,7 +97,7 @@ price7 = model.Price(
     upvotes=None,
     downvotes=None,
     price=None,
-    date=datetime.now().timestamp()
+    date=datetime(2019, 3, 7, 11, 30, 12).timestamp()
 )
 
 # price: too many digits in cents
@@ -108,7 +106,7 @@ price8 = model.Price(
     upvotes=users(200),
     downvotes=users(100, 200),
     price=19.999,
-    date=datetime.now().timestamp()
+    date=datetime(2019, 3, 6, 11, 29, 12).timestamp()
 )
 
 # array of invalid prices
@@ -146,7 +144,7 @@ store2 = model.Store(
         'lat': 0,
         'long': 0
     },
-    prices=random.sample(valid_prices, k=len(valid_prices))
+    prices=valid_prices[::-1]
 )
 
 # valid
@@ -185,7 +183,7 @@ valid_stores = [
 
 # name: name too long
 store4 = model.Store(
-    name=(''.join(random.choices(string.ascii_letters + string.digits, k=65))),
+    name='mwRgzdmj1wZRELlZTlVMmpKhkvEQeR11ncoUae2I9gPAXPFpWqxsJT5AHTRvXEP1j',
     location={
         'lat': 0,
         'long': 0
@@ -273,8 +271,8 @@ item0 = model.Item(
 
 item1 = model.Item(
     name='milk',
-    upc=(''.join(random.choices(string.digits, k=12))),
-    stores=random.sample(valid_stores, k=len(valid_stores))
+    upc='787735087189',
+    stores=valid_stores[::-1]
 )
 
 item6 = model.Item(
@@ -298,29 +296,29 @@ valid_items = [
 
 # name: too many characters
 item2 = model.Item(
-    name=(''.join(random.choices(string.ascii_letters, k=65))),
-    upc=(''.join(random.choices(string.digits, k=12))),
-    stores=random.sample(valid_stores, k=len(valid_stores))
+    name='AcQzhluGIisirQPlAkHrhhTTQttPCtIYCFaVHWuNDVzaPnuXdYQkmkkmUBkJGJfhw',
+    upc='592227616260',
+    stores=valid_stores[-1:] + valid_stores[:-1]
 )
 
 # upc: too short
 item3 = model.Item(
-    name=(''.join(random.choices(string.ascii_letters, k=32))),
-    upc=(''.join(random.choices(string.digits, k=10))),
-    stores=random.sample(valid_stores, k=len(valid_stores))
+    name='hLeLIyWqJtIzirgHSJGwSTGBzHzFIpyo',
+    upc='9093280452',
+    stores=valid_stores
 )
 
 # upc: too long
 item4 = model.Item(
-    name=(''.join(random.choices(string.ascii_letters, k=32))),
-    upc=(''.join(random.choices(string.digits, k=13))),
-    stores=random.sample(valid_stores, k=len(valid_stores))
+    name='xUIgqVRdgGjahkzGonOQGEblMhUYZKXy',
+    upc='8427676361505',
+    stores=valid_stores[::-1]
 )
 
 # stores: invalid store array
 item5 = model.Item(
     name='Target',
-    upc=(''.join(random.choices(string.digits, k=12))),
+    upc='881132924739',
     stores=invalid_stores
 )
 
