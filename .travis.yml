@@ -10,8 +10,11 @@ matrix:
       - cd backend
     install:
       - pip install -r requirements.txt
+      - pip install codecov pytest-cov
     script:
-      - pytest
+      - pytest --cov=./
+    after_success:
+      - codecov
 
   - language: node_js
     node_js:
