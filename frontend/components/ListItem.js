@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     },
     cardContentContainer: { 
         flex: 1, 
-        lexDirection: 'row', 
+        flexDirection: 'row', 
         alignItems: 'center' 
     }
 });
