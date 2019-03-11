@@ -198,7 +198,7 @@ def vote():
 
 
 @app.route('/search', methods=['GET'])
-def get_by_keyword():
+def search():
     upc = request.args.get('upc')
     keyword = request.args.get('keyword')
     if upc:
