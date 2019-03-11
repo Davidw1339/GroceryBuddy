@@ -14,11 +14,9 @@ export default class ItemView extends React.Component {
 
   render() {
     const { params } = this.props.navigation.state;
-    var item = params.item;
-    var name = item.name;
-    var price = '$' + item.price;
-    //var description = item.description;
-    //var store = item.store;
+    let item = params.item;
+    let name = item.name;
+    let price = '$' + item.price;
 
     return (
         <View style={styles.heading}>

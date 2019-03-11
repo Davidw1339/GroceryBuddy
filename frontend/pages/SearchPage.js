@@ -33,6 +33,9 @@ export default class SearchPage extends React.Component {
       searchResults: result
     })
     console.log(result);
+    this.props.navigation.navigate(
+      'Results', {searchResults: result.searchResults}
+    );    
   }
 
   // pop up alert asking user if they want to delete an item
