@@ -29,8 +29,8 @@ def nonexistent_item(db):
     Ensures an Item does not exist in the database
     '''
     test_item = test_data.valid_items[0]
-    assert model.Item.objects(upc=test_item.upc).count(
-    ) == 0, 'Test item was not cleared from database after previous test'
+    assert model.Item.objects(upc=test_item.upc).count() == 0, \
+        'Test item was not cleared from database after previous test'
     return test_item
 
 

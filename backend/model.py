@@ -1,4 +1,5 @@
-from mongoengine import EmbeddedDocument, StringField, IntField, DecimalField, DateTimeField, DictField, ListField, EmbeddedDocumentListField, Document
+from mongoengine import (EmbeddedDocument, StringField, IntField, DecimalField,
+                         DateTimeField, DictField, ListField, EmbeddedDocumentListField, Document)
 import validation
 
 

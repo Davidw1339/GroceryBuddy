@@ -12,6 +12,7 @@ from enum import Enum
 class Error(Enum):
     MISSING_FIELDS = 'Must fill all required fields'
     MISSING_KEYWORD_UPC = 'Request does not contain keyword or upc code'
+    ITEM_EXISTS = 'Item already exists in database'
     ITEM_DNE = 'Item does not exist in database'
     STORE_DNE = 'Store does not exist in database'
     INVALID_DIR = 'Invalid vote direction'
@@ -45,7 +46,7 @@ def hello_world():
 
 
 @app.route('/item', methods=['POST'])
-def post_item():
+def add_item():
     '''
         Body: {"name", "upc", "price", "user", "store", "lat", "long"[, "image_url"]}
         Response:
@@ -57,6 +58,10 @@ def post_item():
     required_fields = ['name', 'upc', 'price', 'user', 'store', 'lat', 'long']
     if not validation.has_required(data, required_fields):
         return json.dumps({'success': False, 'error': Error.MISSING_FIELDS.value})
+
+    lookup = model.Item.objects(upc=data['upc']).first()
+    if lookup is not None:
+        return json.dumps({'success': False, 'error': Error.ITEM_EXISTS.value})
 
     if 'image_url' in data:
         image_url = data['image_url']

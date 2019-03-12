@@ -287,6 +287,13 @@ item7 = model.Item(
     stores=valid_stores[1:3]
 )
 
+item8 = model.Item(
+    name='Candy',
+    upc='770128241494',
+    stores=valid_stores[0:1],
+    image_url='http://www.sweetcitycandy.com/blog/wp-content/uploads/2015/06/Skittles-1024x1003.jpg'
+)
+
 valid_items = [
     item0,
     item1,
