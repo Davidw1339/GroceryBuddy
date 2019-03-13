@@ -298,7 +298,8 @@ valid_items = [
     item0,
     item1,
     item6,
-    item7
+    item7,
+    item8
 ]
 
 # name: too many characters
