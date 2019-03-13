@@ -5,22 +5,24 @@ import {
   Image,
   View,
   TouchableHighlight,
+  ActivityIndicator,
   FlatList,
 } from 'react-native';
 import React from 'react';
 import { Text } from 'react-native-elements';
+import { searchForItem } from '../utils/api';
 
 class ListItem extends React.PureComponent {
     _onPress = () => {
-      this.props.onPressItem(this.props.index);
+      this.props.onPressItem(this.props.item);
     }
   
     render() {
-      const name = this.props.name;
-      const image = this.props.image;
-      console.log(this.props.name);
+      const name = this.props.item.name;
+      const image = this.props.item.image_url;
       return (
         <TouchableHighlight
+          style={this.props.style}
           onPress={this._onPress}
           underlayColor='#dddddd'>
           <View>
@@ -42,25 +44,22 @@ export default class SearchResultsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchResults: [{name:"Red Delicious Apple", 
-      image:"https://steemitimages.com/DQmZpRgMSms57P2WE5qFzvGh42CpK6J9hn5tQBXA4ZtMNvk/apple-fruit.jpg"}, {name:"Red Delicious Apple", 
-      image:"https://steemitimages.com/DQmZpRgMSms57P2WE5qFzvGh42CpK6J9hn5tQBXA4ZtMNvk/apple-fruit.jpg"}]
+      searchResults: [],
+      isLoading: true
     }
   }
 
     searchResults = async keyword => {
       const result = await searchForItem(keyword);
       this.setState({
-        searchResults: result
+        searchResults: result,
+        isLoading: false
       })
-      console.log(result);
-      this.props.navigation.navigate(
-       'Results', {searchResults: result.searchResults}
-      );
     }
 
     componentDidMount(){
       const keyword = this.props.navigation.getParam("keyword", "");
+      this.searchResults(keyword);
     }
 
     static navigationOptions = {
@@ -71,29 +70,40 @@ export default class SearchResultsPage extends React.Component {
 
     _renderItem = ({item}) => {
         return <ListItem
-          name={item.name}
-          image={item.image}
+          item={item}
           onPressItem={this._onPressItem}
         />
     };
       
-    _onPressItem = (index) => {
-        console.log("Pressed row: "+index);
+    _onPressItem = (item) => {
+      this.props.navigation.getParam('handleAddItem', () => {console.log('NO ADD FUNCTION PROVIDED')})(item);
+      this.props.navigation.goBack();
     };
 
     render() {
-        const { params } = this.props.navigation.state;
-        console.log(this.state.searchResults);
+        if (this.state.isLoading) {
+          return (
+            <View style={styles.spinnerContainer}>
+              <ActivityIndicator size="large"/>
+            </View>
+          )
+        }
         return (
           <View style = {styles.resultsContainer}>
+            {this.state.searchResults.length === 0 &&
+              <View style = {styles.spinnerContainer}>
+                <Text style = {styles.title}>No Results Found :(</Text> 
+              </View>
+            } 
             <FlatList 
                 data={this.state.searchResults}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderItem}/>
-            <View style = {[styles.ghostItemContainer, styles.separator]}>
+            <View style = {styles.ghostItemContainer}>
+              <View style = {styles.separator}/>
               <ListItem
-                name={"+ Add Other Item"}
-                onPressItem={this._onPressItem}/>
+                item={{name: "+ Add Other Item"}}
+                onPressItem={() => {this.props.navigation.navigate("AddItem")}}/>
             </View>
           </View>
         );
@@ -123,9 +133,15 @@ const styles = StyleSheet.create({
       padding: 10
     },
     ghostItemContainer: {
-      justifyContent: "flex-end"
+      justifyContent: "flex-end",
+      backgroundColor: "white"
     },
     resultsContainer: {
       flex: 1
+    },
+    spinnerContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
     }
   });  

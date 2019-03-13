@@ -1,48 +1,98 @@
 import React from 'react';
-import { View, StyleSheet, FlatList, ScrollView, Alert, TouchableNativeFeedback, Picker } from 'react-native';
+import { View, StyleSheet, Alert, TouchableNativeFeedback } from 'react-native';
 import ItemSearchBar from '../components/ItemSearchBar';
 import { Text, ListItem, Button } from 'react-native-elements';
-import { searchForItem } from '../utils/api';
 import { dummyItems, createListDummyItems } from '../utils/dummyData'
 
 
 export default class SearchPage extends React.Component {
 
-  static navigationOptions = {
-    title: 'Create Shopping List',
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.getParam('name', 'Create Shopping List'),
+    };
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      searchResults: [],
-      //itemList: []
-      itemList: createListDummyItems,
+      //itemList: [],
+      //itemList: createListDummyItems,
+      stores: {},
       selectedStore: '',
-      currentTotal: 0
     }
   }
 
   componentDidMount() {
-    this.selectCheapestStore()
+
   }
 
-  submitSearch = async keyword => {
-    const result = await searchForItem(keyword);
+  addItem = (item) => {
+    console.log("ADDING ITEM")
+    newStores = Object.assign({}, this.state.stores);
+
+    // set universal parameters for item
+    strippedItem = {
+      name: item.name, 
+      imageUrl: item.image_url,
+      upc: item.upc,
+      quantity: 1
+    }
+
+    for (let i = 0; i < item.stores.length; i++) {
+      storeName = item.stores[i].name
+      if (!(storeName in newStores)) {
+        // create new store, save lat and long
+        newStores[storeName] = {};
+        newStores[storeName].items = []
+        newStores[storeName].lat = item.stores[i].location.lat
+        newStores[storeName].long = item.stores[i].location.long
+      }
+      // set store specific parameters
+      currentPrice = item.stores[i].prices[0]
+      strippedItem.price = currentPrice.price
+      strippedItem.upvotes = currentPrice.upvotes
+      strippedItem.downvotes = currentPrice.downvotes
+
+      newStores[storeName].items.push(strippedItem)
+    }
+
+    this.setState({stores: newStores}, () => {this.recalculateTotals()})
+  }
+
+  calculateStoreTotal = (storeName) => {
+    items = this.state.stores[storeName].items
+    sum = 0
+    for (let i = 0; i < items.length; i++) {
+      sum += items[i].price
+    }
+    return sum
+  }
+
+  // choose cheapest store for a particular list and update total
+  recalculateTotals = () => {
+    cheapestTotal = Number.MAX_VALUE;
+    cheapestStore = '';
+    self = this;
+    Object.keys(this.state.stores).forEach(function(store) {
+      storeTotal = self.calculateStoreTotal(store)
+      if (storeTotal < cheapestTotal) {
+        cheapestTotal = storeTotal;
+        cheapestStore = store;
+      }
+    }) 
+
+    console.log('Got cheapest store: ' + cheapestStore)
     this.setState({
-      searchResults: result
+      selectedStore: cheapestStore,
     })
-    console.log(result);
-    this.props.navigation.navigate(
-      'Results', {searchResults: result.searchResults}
-    );    
   }
 
   // pop up alert asking user if they want to delete an item
   deleteAlert = (i) => {
     Alert.alert(
       'Delete',
-      'Remove \'' + this.state.itemList[i].name + '\' from your shopping list?',
+      'Remove \'' + this.state.stores[this.state.selectedStore].items[i].name + '\' from your shopping list?',
       [
         {text: 'Cancel', style: 'cancel'},
         {
@@ -56,95 +106,43 @@ export default class SearchPage extends React.Component {
 
   // delete item with index i from shopping list
   deleteItem = (i) => {
-    // copy list
-    newList = [...this.state.itemList];
-    newList.splice(i, 1);
-    this.setState({
-      itemList: newList
-    })
-    this.selectCheapestStore()
-  }
-
-  // choose cheapest store out of the items
-  selectCheapestStore = () => {
-    // uses store name as key
-    storeTotals = {}
-    for (let i = 0; i < this.state.itemList.length; i++) {
-      stores = this.state.itemList[i].stores;
-      for (let j = 0; j < stores.length; j++) {
-        if (!(stores[j].name in storeTotals)) {
-          storeTotals[stores[j].name] = 0;
-        }
-        storeTotals[stores[j].name] += this.getItemPrice(i, stores[j].name)
-      }
-    }
-    cheapestTotal = Number.MAX_VALUE;
-    cheapestStore = '';
-    Object.keys(storeTotals).forEach(function(key) {
-      if (storeTotals[key] < cheapestTotal) {
-        cheapestTotal = storeTotals[key];
-        cheapestStore = key;
-      }
+    newStores = Object.assign({}, this.state.stores);
+    Object.keys(this.state.stores).forEach(function(store) {
+      newStores[store].items.splice(i,1)
     }) 
-    if (cheapestStore == '') {
-      cheapestTotal = 0;
-    }
-
     this.setState({
-      selectedStore: cheapestStore,
-      currentTotal: cheapestTotal
+      stores: newStores
     })
-
+    this.recalculateTotals()
   }
 
-  // calculate item with index i price for a certain store
-  getItemPrice = (i, store) => {
-    stores = this.state.itemList[i].stores
-    for (let i = 0; i < stores.length; i++) {
-      // this may need to check lat and long
-      if (stores[i].name == store) {
-        console.log(stores[i].prices[0].price)
-        return stores[i].prices[0].price;
+  submitSearch = async keyword => {
+    this.props.navigation.navigate("SearchResults", {keyword: keyword, handleAddItem: this.addItem})
+  }
+
+  launchShopping = () => {
+    console.log("TITLE: " + this.props.navigation.getParam('name'));
+    this.props.navigation.navigate("Shopping", {
+      list: {
+        name: this.props.navigation.getParam("name"), 
+        store: this.state.selectedStore,
+        lat: this.state.stores[this.state.selectedStore].lat,
+        long: this.state.stores[this.state.selectedStore].long,
+        items: this.state.stores[this.state.selectedStore].items
       }
-    } 
-    return -1
+    })
   }
-
-  
 
   render() {
-    return (
-      <View style={styles.container}>
+    if (this.state.selectedStore === '') {
+      return (
+        <View style={styles.container}>
         <ItemSearchBar onSearch={this.submitSearch} />
-        {this.state.searchResults.map((searchResult, i) => {
-          console.log(searchResult);
-          return (
-            <View key={i}>
-              <Text h4 key={i}>{searchResult.name}</Text>
-              <Text key={searchResult.upc + i}>UPC: {searchResult.upc} Price: {searchResult.stores[0].price[0].price}</Text>
-            </View>
-          )
-        })}
-
-        <View>
-          {this.state.itemList.map((l, i) => (
-            <ListItem
-              key={i}
-              Component={TouchableNativeFeedback}
-              onLongPress={() => this.deleteAlert(i)}
-              leftAvatar={{ title: l.name[0], source: { uri: l.image_url } }}
-              title={l.name}
-              rightTitle={'$' + this.getItemPrice(i, this.state.selectedStore)}
-              bottomDivider
-            />
-          ))}
-        </View>
 
         <View style={styles.footer}>
           <ListItem
-            title={'Total (' + this.state.itemList.length + ' items)'}
-            subtitle={this.state.selectedStore}
-            rightTitle={'$' + this.state.currentTotal}
+            title={'Total (0) items'}
+            rightTitle={'$0.00'}
             topDivider
           />
         </View>
@@ -155,9 +153,51 @@ export default class SearchPage extends React.Component {
               size: 20,
               color: "white"
             }}
-            title="Finish List"
+            title="Finish Shopping List"
             iconRight
             onPress={() => {this.props.navigation.navigate("Shopping")}}
+          />
+        </View>
+
+      </View>
+      );
+    }
+    return (
+      <View style={styles.container}>
+        <ItemSearchBar onSearch={this.submitSearch} />
+
+        <View>
+          {this.state.stores[this.state.selectedStore].items.map((l, i) => (
+            <ListItem
+              key={i}
+              Component={TouchableNativeFeedback}
+              onLongPress={() => this.deleteAlert(i)}
+              leftAvatar={{ title: l.name, source: { uri: l.imageUrl } }}
+              title={l.name}
+              rightTitle={'$' + this.state.stores[this.state.selectedStore].items[i].price}
+              bottomDivider
+            />
+          ))}
+        </View>
+
+        <View style={styles.footer}>
+          <ListItem
+            title={'Total (' + this.state.stores[this.state.selectedStore].items.length + ' items)'}
+            subtitle={this.state.selectedStore}
+            rightTitle={'$' + this.calculateStoreTotal(this.state.selectedStore)}
+            topDivider
+          />
+        </View>
+        <View>
+          <Button
+            icon={{
+              name: "check",
+              size: 20,
+              color: "white"
+            }}
+            title="Finish Shopping List"
+            iconRight
+            onPress={this.launchShopping}
           />
         </View>
 
@@ -170,7 +210,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 30,
     padding: 10
   },
   footer: {

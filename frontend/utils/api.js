@@ -2,6 +2,7 @@ import fetch from 'node-fetch';
 import { AsyncStorage } from 'react-native';
 
 const BACKEND_URL = 'http://grocerybuddy.eastus.cloudapp.azure.com'
+
 /*
 Takes in form data from component and casts values to match intended request
 */
@@ -44,10 +45,12 @@ export const addGroceryItem = (formData) => {
 
 export const searchForItem = (keyword) => {
     const ROUTE = '/search?keyword=' + keyword
-    console.log('we are searching');
+    console.log('we are searching ' + (BACKEND_URL + ROUTE));
     return fetch(BACKEND_URL + ROUTE, {
         method: "GET"
-    }).then(res => res.json());
+    })
+    .then(res => res.json())
+    .catch(error => console.error(error));
 }
 
 export const searchByUPC = (upc) => {
@@ -94,3 +97,28 @@ export const deleteList = (currentLists, listId) => {
         console.log("ERROR DELETING LIST: " + error);
     })
 }
+
+export const votePrice = (voteDirection, user, upc, storeObj) => {
+    const ROUTE = '/vote';
+    return fetch(BACKEND_URL + ROUTE, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+          upc,
+          store: storeObj.name,
+          lat: storeObj.lat,
+          long: storeObj.long,
+          user: user,
+          dir: voteDirection
+      })
+    })
+    .then(response => response.json())
+    .then(json => {
+        console.log(json);
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+} 

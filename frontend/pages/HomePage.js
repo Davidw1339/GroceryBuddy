@@ -48,10 +48,14 @@ export default class HomePage extends React.Component {
         this.retrieveLists();
     }
 
+    launchList = (name) => {
+        this.props.navigation.navigate("Search", {name: name})
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <Button
+                {/* <Button
                     containerStyle={styles.button}
                     title="Go to search page"
                     onPress={() => {this.props.navigation.navigate("Search")}}
@@ -65,11 +69,11 @@ export default class HomePage extends React.Component {
                     containerStyle={styles.button}
                     title="Go to shopping page"
                     onPress={() => {this.props.navigation.navigate("Shopping")}}
-                />
+                /> */}
                 {/* Render all list items */}
                 <ScrollView style={styles.scrollView}>
                     {this.state.lists.map(({name}, i) => (
-                        <ListItem key={i} name={name} handleDelete={() => {this.deleteList(i)}}/>
+                        <ListItem key={i} name={name} handleDelete={() => {this.deleteList(i)}} handleLaunchList={() => {this.launchList(name)}}/>
                     ))}
                 </ScrollView>
                 <ActionButton buttonColor="#2196f3" onPress={this.toggleAddListOverlay}/>

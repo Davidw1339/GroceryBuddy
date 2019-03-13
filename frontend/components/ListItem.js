@@ -12,7 +12,7 @@ export default class ListItem extends Component {
 
     render() {
         return (
-            <TouchableNativeFeedback>
+            <TouchableNativeFeedback onPress={this.props.handleLaunchList}>
                 <Card containerStyle={styles.card}>
                     <View style={styles.cardContentContainer}>
                         <Text style={styles.cardText}>{this.props.name}</Text>

@@ -23,6 +23,9 @@ const StackNavigator = createStackNavigator({
   Shopping: {
     screen: ShoppingPage
   },
+  AddItem: {
+    screen: AddItemPage
+  }
   Details: {
     screen:DetailedViewPage
   }
