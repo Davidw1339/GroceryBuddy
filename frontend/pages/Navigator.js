@@ -6,6 +6,7 @@ import AddItemPage from './AddItemPage';
 import HomePage from './HomePage';
 import SearchResultsPage from './SearchResultsPage';
 import ShoppingPage from './ShoppingPage';
+import DetailedViewPage from "./DetailedViewPage";
 
 const ICON_SIZE = 25;
 
@@ -21,6 +22,9 @@ const StackNavigator = createStackNavigator({
   },
   Shopping: {
     screen: ShoppingPage
+  },
+  Details: {
+    screen:DetailedViewPage
   }
 })
 

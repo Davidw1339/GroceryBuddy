@@ -1,8 +1,7 @@
 import fetch from 'node-fetch';
 import { AsyncStorage } from 'react-native';
 
-const BACKEND_URL = 'http://grocerybuddybackend.azurewebsites.net'
-
+const BACKEND_URL = 'http://grocerybuddy.eastus.cloudapp.azure.com'
 /*
 Takes in form data from component and casts values to match intended request
 */
@@ -50,6 +49,12 @@ export const searchForItem = (keyword) => {
         method: "GET"
     }).then(res => res.json());
 }
+
+export const searchByUPC = (upc) => {
+    const ROUTE = `${BACKEND_URL}/search?upc=${upc}`;
+    return fetch(ROUTE, {method:"GET"}).then(res=>res.json());
+};
+
 
 /*
  * Returns all grocery lists associated with current user
