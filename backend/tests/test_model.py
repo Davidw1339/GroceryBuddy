@@ -2,6 +2,8 @@ import pytest
 import model
 import test_data
 import copy
+import mongoengine.errors as errors
+import validation
 
 
 def test_model_loads():
@@ -19,6 +21,8 @@ def test_invalid_items():
     for item in test_data.invalid_items:
         try:
             item.save()
-            assert False
-        except Exception:
+        except errors.ValidationError:
             pass
+        except validation.ValidationException:
+            pass
+

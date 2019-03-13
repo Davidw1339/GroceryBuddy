@@ -157,7 +157,7 @@ def test_valid_has_required():
     assert has_required(data, required_fields)
 
 
-def test_valid_has_required():
+def test_valid_has_required_extra():
     data = {
         'name': None,
         'upc': None,

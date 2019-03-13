@@ -25,9 +25,9 @@ const StackNavigator = createStackNavigator({
   },
   AddItem: {
     screen: AddItemPage
-  }
+  },
   Details: {
-    screen:DetailedViewPage
+    screen: DetailedViewPage
   }
 })
 
