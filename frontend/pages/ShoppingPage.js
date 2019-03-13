@@ -100,7 +100,7 @@ export default class ShoppingPage extends React.Component {
                         return(
                             <View key={i} style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
                                 <CheckBox checked={this.state[checkState]} onPress={() => this.setState({[checkState]: !this.state[checkState]})}/>
-                                <TouchableNativeFeedback style={styles.button} onPress={() => this.props.navigation.navigate('ItemDetails')}>
+                                <TouchableNativeFeedback style={styles.button} onPress={() => this.props.navigation.navigate('Details', {upc: list_item.upc})}>
                                     <View style={{flex: 1, flexDirection: 'row'}}>
                                         <Image style={{width: 75, height: 75, marginRight: 20}} source={{uri: list_item.imageUrl}}/>
                                         <View style={{textAlign: 'center', flex: 1}}>
