@@ -98,34 +98,34 @@ export default class ShoppingPage extends React.Component {
                         const upState = "up" + i;
                         const downState = "down" + i;
                         return(
-                            <View key={i} style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20}}>
+                            <View key={i} style={styles.itemContainer}>
                                 <CheckBox checked={this.state[checkState]} onPress={() => this.setState({[checkState]: !this.state[checkState]})}/>
                                 <TouchableNativeFeedback style={styles.button} onPress={() => this.props.navigation.navigate('Details', {upc: list_item.upc})}>
-                                    <View style={{flex: 1, flexDirection: 'row'}}>
-                                        <Image style={{width: 75, height: 75, marginRight: 20}} source={{uri: list_item.imageUrl}}/>
-                                        <View style={{textAlign: 'center', flex: 1}}>
-                                            <Text style={{fontSize: 20}} numberOfLines={2}>{list_item.name}</Text>
+                                    <View style={styles.itemDetailsContainer}>
+                                        <Image style={styles.image} source={{uri: list_item.imageUrl}}/>
+                                        <View style={styles.item}>
+                                            <Text style={styles.itemName} numberOfLines={2}>{list_item.name}</Text>
                                             <Text>Price: ${Number.parseFloat(list_item.price).toFixed(2)}</Text>
                                             <Text>Quantity: {list_item.quantity}</Text>
                                         </View>
                                     </View>
                                 </TouchableNativeFeedback>
-                                <View style={{marginLeft: 20, justifyContent: 'center'}}>
-                                    <View style={{width: 100, flexDirection: 'row', justifyContent: 'center'}}>
+                                <View style={styles.vote}>
+                                    <View style={styles.voteContainer}>
                                         <TouchableNativeFeedback onPress={() => {
                                             this.upvotePrice(list_item, i)
                                             }}>
                                             <AntDesign name="caretup" size={24} color={list_item.upvotes && list_item.upvotes.includes(this.username) ? "green" : "black"}/>
                                         </TouchableNativeFeedback>
-                                        <Text style={{marginLeft: 10, width: 20, textAlign: 'center'}}>{list_item.upvotes ? list_item.upvotes.length : 0}</Text>
+                                        <Text style={styles.voteButton}>{list_item.upvotes ? list_item.upvotes.length : 0}</Text>
                                     </View>
-                                    <View style={{width: 100, flexDirection: 'row', justifyContent: 'center'}}>
+                                    <View style={styles.voteContainer}>
                                         <TouchableNativeFeedback onPress={() => {
                                             this.downvotePrice(list_item, i)
                                             }}>
                                             <AntDesign name="caretdown" size={24} color={list_item.downvotes && list_item.downvotes.includes(this.username) ? "red": "black"}/>
                                         </TouchableNativeFeedback>
-                                        <Text style={{marginLeft: 10, width: 20, textAlign: 'center'}}>{list_item.downvotes ? list_item.downvotes.length : 0}</Text>
+                                        <Text style={styles.voteButton} >{list_item.downvotes ? list_item.downvotes.length : 0}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -151,5 +151,40 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#DDDDDD',
         padding: 10
+    },
+    itemName: {
+        fontSize: 20
+    },
+    item: {
+        textAlign: 'center', 
+        flex: 1
+    },
+    image: {
+        width: 75, 
+        height: 75, 
+        marginRight: 20
+    },
+    itemDetailsContainer: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    itemContainer: {
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        marginBottom: 20
+    },
+    voteButton: {
+        marginLeft: 10, 
+        width: 20, 
+        textAlign: 'center'
+    },
+    voteContainer: {
+        width: 100, 
+        flexDirection: 'row', 
+        justifyContent: 'center'
+    },
+    vote: {
+        marginLeft: 20, 
+        justifyContent: 'center'
     }
 });
