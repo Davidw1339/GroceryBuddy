@@ -3,6 +3,7 @@ import json
 import app
 import model
 import test_data
+import validation
 
 
 def test_add_existing_store(client, existing_item):
@@ -87,3 +88,49 @@ def test_nonexistent_item(client, nonexistent_item):
     }))
     response = json.loads(rv.data)
     assert response == {'success': False, 'error': app.Error.ITEM_DNE.value}
+
+
+def test_missing_user(client, existing_item):
+    upc = str(existing_item.upc)
+    store = existing_item.stores[0]
+    store_name = str(store.name)
+    lat = float(store.location['lat'])
+    long_arg = float(store.location['long'])
+
+    price_data = test_data.valid_prices[5]
+    price = float(price_data.price)
+
+    rv = client.post('/price', data=json.dumps({
+        'upc': upc,
+        'price': price,
+        'store': store_name,
+        'lat': lat,
+        'long': long_arg
+    }))
+    response = json.loads(rv.data)
+    assert response == {'success': False,
+                        'error': app.Error.MISSING_FIELDS.value}
+
+
+def test_add_invalid_store(client, existing_item):
+    upc = str(existing_item.upc)
+    new_store = test_data.store5
+    store_name = str(new_store.name)
+    lat = float(new_store.location['lat'])
+    long_arg = float(new_store.location['long'])
+
+    price_data = test_data.valid_prices[5]
+    price = float(price_data.price)
+    user = str(price_data.user)
+
+    rv = client.post('/price', data=json.dumps({
+        'upc': upc,
+        'price': price,
+        'user': user,
+        'store': store_name,
+        'lat': lat,
+        'long': long_arg
+    }))
+    response = json.loads(rv.data)
+    assert response == {
+        'success': False, 'error': validation.LocationValidationException.INVALID_LAT_VALUE_ERROR}

@@ -39,10 +39,10 @@ try:
 except KeyError:
     pass
 
-
+HELLO_WORLD = 'Hello, Grocery buddies!'
 @app.route('/')
 def hello_world():
-    return 'Hello, Grocery buddies!'
+    return HELLO_WORLD
 
 
 @app.route('/item', methods=['POST'])
@@ -249,7 +249,8 @@ def get_optimal_store():
         item = json.loads(item)
         upc = item[0]['upc']
         for store in item[0]['stores']:
-            store_key = str(store['name']) + '|' + str(store['location']['lat']) + '|' + str(store['location']['long'])
+            store_key = str(store['name']) + '|' + str(store['location']
+                                                       ['lat']) + '|' + str(store['location']['long'])
             latest_price = store['prices'][-1]['price']
             upc_list = upc_dict.get(upc)
             if upc_list is None:
@@ -275,7 +276,8 @@ def get_optimal_store():
         for store, price_list in store_dict_price.items():
             total_price = sum(price_list)
             bigger = len(price_list) > item_count
-            equal_and_cheaper = len(price_list) == item_count and total_price < lowest_price[1]
+            equal_and_cheaper = len(
+                price_list) == item_count and total_price < lowest_price[1]
             if lowest_price is None or bigger or equal_and_cheaper:
                 lowest_price = (store, total_price)
                 item_count = len(price_list)
@@ -305,7 +307,8 @@ def get_optimal_store():
             if store_dict_entry is None:
                 store_dict[best_store_price[0]] = [(upc, best_store_price[1])]
             else:
-                store_dict[best_store_price[0]].append((upc, best_store_price[1]))
+                store_dict[best_store_price[0]].append(
+                    (upc, best_store_price[1]))
         optimal_prices = []
         for store, upc_price_list in store_dict.items():
             store_info = store.split('|')
@@ -322,7 +325,8 @@ def get_optimal_store():
             for upc_price in upc_price_list:
                 upcs.append(upc_price[0])
                 total_price += upc_price[1]
-            optimal_prices.append({'store': store_obj, 'upcs': upcs, 'price': total_price})
+            optimal_prices.append(
+                {'store': store_obj, 'upcs': upcs, 'price': total_price})
         return json.dumps({'success': True, 'error': error, 'optimal_prices': optimal_prices})
 
 
