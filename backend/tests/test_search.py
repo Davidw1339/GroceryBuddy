@@ -1,6 +1,6 @@
 import pytest
 import json
-import app
+import search
 import test_data
 import copy
 
@@ -8,7 +8,7 @@ import copy
 def test_no_args(client):
     rv = client.get('/search')
     response = json.loads(rv.data)
-    assert response == {'success': False, 'error': app.Error.MISSING_KEYWORD_UPC.value}
+    assert response == {'success': False, 'error': search.Error.MISSING_KEYWORD_UPC.value}
 
 
 def test_extra_args(client):
@@ -16,7 +16,7 @@ def test_extra_args(client):
         'extra': 'peilun'
     }))
     response = json.loads(rv.data)
-    assert response == {'success': False, 'error': app.Error.MISSING_KEYWORD_UPC.value}
+    assert response == {'success': False, 'error': search.Error.MISSING_KEYWORD_UPC.value}
 
 
 def test_search_by_upc(client, existing_item):

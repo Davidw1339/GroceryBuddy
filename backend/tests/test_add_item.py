@@ -1,6 +1,6 @@
 import pytest
 import json
-import app
+import add_item
 import model
 import test_data
 
@@ -111,7 +111,7 @@ def test_existing_item(client, existing_item):
         'long': long_arg
     }))
     response = json.loads(rv.data)
-    assert response == {'success': False, 'error': app.Error.ITEM_EXISTS.value}
+    assert response == {'success': False, 'error': add_item.Error.ITEM_EXISTS.value}
 
 
 def test_partial_item(client, nonexistent_item):
@@ -136,7 +136,7 @@ def test_partial_item(client, nonexistent_item):
     }))
     response = json.loads(rv.data)
     assert response == {'success': False,
-                        'error': app.Error.MISSING_FIELDS.value}
+                        'error': add_item.Error.MISSING_FIELDS.value}
 
 
 def test_invalid_price(client, nonexistent_item):

@@ -8,11 +8,10 @@ from os import environ
 from datetime import datetime
 from enum import Enum
 
+from search import search_blueprint
+from add_item import add_item_blueprint
 
 class Error(Enum):
-    MISSING_FIELDS = 'Must fill all required fields'
-    MISSING_KEYWORD_UPC = 'Request does not contain keyword or upc code'
-    ITEM_EXISTS = 'Item already exists in database'
     ITEM_DNE = 'Item does not exist in database'
     STORE_DNE = 'Store does not exist in database'
     INVALID_DIR = 'Invalid vote direction'
@@ -33,6 +32,8 @@ class Vote(Enum):
 
 
 app = Flask(__name__)
+app.register_blueprint(search_blueprint)
+app.register_blueprint(add_item_blueprint)
 
 try:
     connect('grocery-db', host=environ['MONGO_HOST'])
@@ -45,57 +46,7 @@ def hello_world():
     return HELLO_WORLD
 
 
-@app.route('/item', methods=['POST'])
-def add_item():
-    '''
-        Body: {"name", "upc", "price", "user", "store", "lat", "long"[, "image_url"]}
-        Response:
-            - {"success": true or false},
-            - {"error": error description}
-    '''
-    data = request.get_json(force=True)
 
-    required_fields = ['name', 'upc', 'price', 'user', 'store', 'lat', 'long']
-    if not validation.has_required(data, required_fields):
-        return json.dumps({'success': False, 'error': Error.MISSING_FIELDS.value})
-
-    lookup = model.Item.objects(upc=data['upc']).first()
-    if lookup is not None:
-        return json.dumps({'success': False, 'error': Error.ITEM_EXISTS.value})
-
-    if 'image_url' in data:
-        image_url = data['image_url']
-    else:
-        image_url = ''
-
-    new_price = model.Price(
-        user=data['user'],
-        upvotes=[],
-        downvotes=[],
-        price=data['price'],
-        date=datetime.now().timestamp()
-    )
-    new_store = model.Store(
-        name=data['store'],
-        location={
-            'lat': data['lat'],
-            'long': data['long']
-        },
-        prices=[new_price]
-    )
-    new_item = model.Item(
-        upc=data['upc'],
-        name=data['name'],
-        image_url=image_url,
-        stores=[new_store]
-    )
-
-    try:
-        new_item.save()
-    except (validation.ValidationException, mongoengine.errors.ValidationError) as e:
-        return json.dumps({'success': False, 'error': str(e)})
-
-    return json.dumps({'success': True, 'error': None})
 
 
 @app.route('/price', methods=['POST'])
@@ -202,16 +153,7 @@ def vote():
     return json.dumps({'success': True, 'error': None})
 
 
-@app.route('/search', methods=['GET'])
-def search():
-    upc = request.args.get('upc')
-    keyword = request.args.get('keyword')
-    if upc:
-        return model.Item.objects(upc=upc).to_json()
-    elif keyword:
-        return model.Item.objects(name__icontains=keyword).to_json()
-    else:
-        return json.dumps({'success': False, 'error': Error.MISSING_KEYWORD_UPC.value})
+
 
 
 @app.route('/optimal_store', methods=['POST'])
