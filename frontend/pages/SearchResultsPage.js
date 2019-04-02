@@ -17,9 +17,33 @@ class ListItem extends React.PureComponent {
       this.props.onPressItem(this.props.item);
     }
 
+    // returns string representing price range of item
+    getPriceRange = () => {
+      if(this.props.item.stores == null) {
+        return '';
+      }
+      let minPrice = Number.MAX_VALUE;
+      let maxPrice = 0;
+      for (let i = 0; i < this.props.item.stores.length; i++) {
+        const price = this.props.item.stores[i].prices[0].price;
+        if (price < minPrice) {
+          minPrice = price;
+        }
+        if (price > maxPrice) {
+          maxPrice = price;
+        }
+      }
+      if (maxPrice == minPrice) {
+        return '$' + minPrice;
+      } else {
+        return '$' + minPrice + ' - $' + maxPrice;
+      }
+    }
+
     render() {
       const name = this.props.item.name;
       const image = this.props.item.image_url;
+      const priceRange = this.getPriceRange();
       return (
         <TouchableHighlight
           style={this.props.style}
@@ -31,6 +55,8 @@ class ListItem extends React.PureComponent {
               <View style={styles.textContainer}>
                 <Text style={styles.title}
                   numberOfLines={1}>{name}</Text>
+                <Text style={styles.subtitle}
+                  numberOfLines={1}>{priceRange}</Text>
               </View>
             </View>
             <View style={styles.separator}/>
@@ -124,9 +150,14 @@ const styles = StyleSheet.create({
       backgroundColor: '#dddddd'
     },
     title: {
-      fontSize: 25,
+      fontSize: 18,
       color: '#000000',
       marginTop: 20
+    },
+    subtitle: {
+      fontSize: 16,
+      color: '#000000',
+      marginTop: 5
     },
     rowContainer: {
       flexDirection: 'row',
