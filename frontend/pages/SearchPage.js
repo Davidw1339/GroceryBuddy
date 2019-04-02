@@ -16,8 +16,6 @@ export default class SearchPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //itemList: [],
-      //itemList: createListDummyItems,
       stores: {},
       selectedStore: '',
     }
@@ -33,7 +31,7 @@ export default class SearchPage extends React.Component {
 
     // set universal parameters for item
     strippedItem = {
-      name: item.name, 
+      name: item.name,
       imageUrl: item.image_url,
       upc: item.upc,
       quantity: 1
@@ -80,7 +78,7 @@ export default class SearchPage extends React.Component {
         cheapestTotal = storeTotal;
         cheapestStore = store;
       }
-    }) 
+    })
 
     console.log('Got cheapest store: ' + cheapestStore)
     this.setState({
@@ -96,7 +94,7 @@ export default class SearchPage extends React.Component {
       [
         {text: 'Cancel', style: 'cancel'},
         {
-          text: 'OK', 
+          text: 'OK',
           onPress: () => this.deleteItem(i)
         },
       ],
@@ -109,7 +107,7 @@ export default class SearchPage extends React.Component {
     newStores = Object.assign({}, this.state.stores);
     Object.keys(this.state.stores).forEach(function(store) {
       newStores[store].items.splice(i,1)
-    }) 
+    })
     this.setState({
       stores: newStores
     })
@@ -117,14 +115,17 @@ export default class SearchPage extends React.Component {
   }
 
   submitSearch = async keyword => {
-    this.props.navigation.navigate("SearchResults", {keyword: keyword, handleAddItem: this.addItem})
+      keyword_t = keyword.trim();
+      if (keyword_t !== "") {
+          this.props.navigation.navigate("SearchResults", {keyword: keyword_t, handleAddItem: this.addItem})
+      }
   }
 
   launchShopping = () => {
     console.log("TITLE: " + this.props.navigation.getParam('name'));
     this.props.navigation.navigate("Shopping", {
       list: {
-        name: this.props.navigation.getParam("name"), 
+        name: this.props.navigation.getParam("name"),
         store: this.state.selectedStore,
         lat: this.state.stores[this.state.selectedStore].lat,
         long: this.state.stores[this.state.selectedStore].long,
