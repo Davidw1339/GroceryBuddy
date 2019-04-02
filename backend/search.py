@@ -1,12 +1,10 @@
 from flask import Blueprint, request
-from enum import Enum
 import model
 import json
+import app
 
 search_blueprint = Blueprint("search", __name__)
 
-class Error(Enum):
-    MISSING_KEYWORD_UPC = 'Request does not contain keyword or upc code'
 
 @search_blueprint.route("/search", methods=['GET'])
 def search():
@@ -23,4 +21,4 @@ def search():
     elif keyword:
         return model.Item.objects(name__icontains=keyword).to_json()
     else:
-        return json.dumps({'success': False, 'error': Error.MISSING_KEYWORD_UPC.value})
+        return json.dumps({'success': False, 'error': app.Error.MISSING_KEYWORD_UPC.value})

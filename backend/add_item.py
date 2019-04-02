@@ -1,16 +1,13 @@
 from flask import Blueprint, request
-from enum import Enum
 import model
 import json
 import validation
 from datetime import datetime
 import mongoengine.errors
+import app
 
 add_item_blueprint = Blueprint("add_item", __name__)
 
-class Error(Enum):
-    MISSING_FIELDS = 'Must fill all required fields'
-    ITEM_EXISTS = 'Item already exists in database'
 
 @add_item_blueprint.route('/item', methods=['POST'])
 def add_item():
@@ -24,11 +21,11 @@ def add_item():
 
     required_fields = ['name', 'upc', 'price', 'user', 'store', 'lat', 'long']
     if not validation.has_required(data, required_fields):
-        return json.dumps({'success': False, 'error': Error.MISSING_FIELDS.value})
+        return json.dumps({'success': False, 'error': app.Error.MISSING_FIELDS.value})
 
     lookup = model.Item.objects(upc=data['upc']).first()
     if lookup is not None:
-        return json.dumps({'success': False, 'error': Error.ITEM_EXISTS.value})
+        return json.dumps({'success': False, 'error': app.Error.ITEM_EXISTS.value})
 
     if 'image_url' in data:
         image_url = data['image_url']
