@@ -16,17 +16,3 @@ const StackNav = createStackNavigator({
 )
 
 export default StackNav;
-
-/*export default class AddItemPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { isLoading: true }
-  }
-
-  render() {
-    return (
-      <AddItemForm/>
-    );
-  }
-}
-*/

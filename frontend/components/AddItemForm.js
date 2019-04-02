@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Input, Text, Button } from 'react-native-elements';
 import { addGroceryItem } from '../utils/api';
@@ -74,30 +74,34 @@ export default class AddItemForm extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text h4>Add A Grocery Item</Text>
-        {INPUT_FIELDS.map((fieldProps) => {
-          return <Input
-              key={fieldProps.name}
-              onChangeText={(textInput) => this.setState({ [fieldProps.name]: textInput })}
-              value={this.state[fieldProps.name]}
-              containerStyle={styles.input}
-              {...fieldProps}
-              />
-        })}
-        <Button
-          title="  Scan UPC"
-          raised
-          icon={<Ionicons name="ios-camera" size={24} color={"white"}/>}
-          onPress={this.openScanner}
-          containerStyle={styles.input}
-          />
-        <Button
-          title="Submit Item"
-          raised
-          onPress={this.submitItemForm}
-          />
-      </View>
+      <ScrollView>
+        <KeyboardAvoidingView behavior="position" enabled>
+          <View style={styles.container}>
+          <Text h4>Add A Grocery Item</Text>
+          {INPUT_FIELDS.map((fieldProps) => {
+            return <Input
+                key={fieldProps.name}
+                onChangeText={(textInput) => this.setState({ [fieldProps.name]: textInput })}
+                value={this.state[fieldProps.name]}
+                containerStyle={styles.input}
+                {...fieldProps}
+                />
+          })}
+          <Button
+            title="  Scan UPC"
+            raised
+            icon={<Ionicons name="ios-camera" size={24} color={"white"}/>}
+            onPress={this.openScanner}
+            containerStyle={styles.input}
+            />
+          <Button
+            title="Submit Item"
+            raised
+            onPress={this.submitItemForm}
+            />
+          </View>
+        </KeyboardAvoidingView>
+      </ScrollView>
     );
   }
 }

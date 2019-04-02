@@ -1,7 +1,6 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import SearchPage from './SearchPage';
-import ListPage from './ListPage';
 import AddItemPage from './AddItemPage';
 import HomePage from './HomePage';
 import SearchResultsPage from './SearchResultsPage';
