@@ -16,7 +16,7 @@ class ListItem extends React.PureComponent {
     _onPress = () => {
       this.props.onPressItem(this.props.item);
     }
-  
+
     render() {
       const name = this.props.item.name;
       const image = this.props.item.image_url;
@@ -74,7 +74,7 @@ export default class SearchResultsPage extends React.Component {
           onPressItem={this._onPressItem}
         />
     };
-      
+
     _onPressItem = (item) => {
       this.props.navigation.getParam('handleAddItem', () => {console.log('NO ADD FUNCTION PROVIDED')})(item);
       this.props.navigation.goBack();
@@ -92,10 +92,10 @@ export default class SearchResultsPage extends React.Component {
           <View style = {styles.resultsContainer}>
             {this.state.searchResults.length === 0 &&
               <View style = {styles.spinnerContainer}>
-                <Text style = {styles.title}>No Results Found :(</Text> 
+                <Text style = {styles.title}>No Results Found :(</Text>
               </View>
-            } 
-            <FlatList 
+            }
+            <FlatList
                 data={this.state.searchResults}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderItem}/>
@@ -133,8 +133,9 @@ const styles = StyleSheet.create({
       padding: 10
     },
     ghostItemContainer: {
-      justifyContent: "flex-end",
-      backgroundColor: "white"
+      justifyContent: 'flex-end',
+      backgroundColor: 'white',
+      alignItems: 'center'
     },
     resultsContainer: {
       flex: 1
@@ -144,4 +145,4 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center'
     }
-  });  
+  });
