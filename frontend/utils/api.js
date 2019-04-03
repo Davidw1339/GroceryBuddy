@@ -66,7 +66,7 @@ export const getLists = () => {
     return AsyncStorage.getItem('Lists')
     .then((result) => {
         if (result === null) {
-            return [{name: "Veggies"}, {name: "Meats"}, {name: "Essentials"}, {name: "Cleaning Supplies"}];
+            return [{name: "BBQ"}];
         }
         return JSON.parse(result);
     })
