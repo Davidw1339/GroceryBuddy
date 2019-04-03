@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import { Text } from 'react-native-elements';
-import { searchForItem } from '../utils/api';
+import { searchForItem, searchByUPC } from '../utils/api';
 
 class ListItem extends React.PureComponent {
     _onPress = () => {
@@ -75,8 +75,14 @@ export default class SearchResultsPage extends React.Component {
     }
   }
 
-    searchResults = async keyword => {
-      const result = await searchForItem(keyword);
+    searchResults = async (keyword, upc) => {
+      let result;
+      // if keyword doesn't exist then attempt to search by UPC
+      if(!keyword) {
+        result = await searchByUPC(upc);
+      } else {
+        result = await searchForItem(keyword);
+      }
       this.setState({
         searchResults: result,
         isLoading: false
@@ -85,7 +91,8 @@ export default class SearchResultsPage extends React.Component {
 
     componentDidMount(){
       const keyword = this.props.navigation.getParam("keyword", "");
-      this.searchResults(keyword);
+      const upc = this.props.navigation.getParam("upc", "");
+      this.searchResults(keyword, upc);
     }
 
     static navigationOptions = {

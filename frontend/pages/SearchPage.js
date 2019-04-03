@@ -2,7 +2,6 @@ import React from 'react';
 import { View, StyleSheet, Alert, TouchableNativeFeedback } from 'react-native';
 import ItemSearchBar from '../components/ItemSearchBar';
 import { Text, ListItem, Button } from 'react-native-elements';
-import { dummyItems, createListDummyItems } from '../utils/dummyData'
 
 
 export default class SearchPage extends React.Component {
@@ -114,11 +113,20 @@ export default class SearchPage extends React.Component {
     this.recalculateTotals()
   }
 
-  submitSearch = async keyword => {
-      keyword_t = keyword.trim();
-      if (keyword_t !== "") {
-          this.props.navigation.navigate("SearchResults", {keyword: keyword_t, handleAddItem: this.addItem})
-      }
+  submitSearch = async (keyword, upc) => {
+    if (!keyword || (keyword && keyword.trim() !== "")) {
+      this.props.navigation.navigate("SearchResults", {keyword: keyword.trim(), upc: upc, handleAddItem: this.addItem})
+    }
+  }
+
+  // This function will be called when a bar code is scanned, simply navigates to search results page
+  handleBarCodeScanned = (type, data) => {
+    this.submitSearch(null, data);
+  }
+
+  // This function is called when the scan button (camera button) is pressed
+  scanBarCode = () => {
+    this.props.navigation.navigate("Scan", {handleBarCodeScanned: this.handleBarCodeScanned})
   }
 
   launchShopping = () => {
@@ -138,7 +146,7 @@ export default class SearchPage extends React.Component {
     if (this.state.selectedStore === '') {
       return (
         <View style={styles.container}>
-        <ItemSearchBar onSearch={this.submitSearch} />
+        <ItemSearchBar onSearch={this.submitSearch} onPressCamera={this.scanBarCode}/>
 
         <View style={styles.footer}>
           <ListItem

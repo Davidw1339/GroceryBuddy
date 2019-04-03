@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import SearchPage from './SearchPage';
+import UPCScanner from '../components/UPCScanner';
 import AddItemPage from './AddItemPage';
 import HomePage from './HomePage';
 import SearchResultsPage from './SearchResultsPage';
@@ -27,6 +28,9 @@ const StackNavigator = createStackNavigator({
   },
   Details: {
     screen: DetailedViewPage
+  },
+  Scan: {
+    screen: UPCScanner
   }
 })
 

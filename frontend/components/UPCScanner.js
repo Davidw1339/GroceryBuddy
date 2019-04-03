@@ -3,6 +3,12 @@ import { StyleSheet, Text, View } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo';
 
 export default class ItemAdditionForm extends React.Component {
+  static navigationOptions = () => {
+    return {
+      title: "Scan Bar Code",
+    };
+  };
+
   constructor(props) {
     super(props);
 
@@ -36,7 +42,7 @@ export default class ItemAdditionForm extends React.Component {
   }
 
   handleBarCodeScanned = ({ type, data }) => {
-    this.props.navigation.getParam('handleBarCodeScanned', () => {alert("Reached scanner from unknown route")})(type, data);
     this.props.navigation.goBack();
+    this.props.navigation.getParam('handleBarCodeScanned', () => {alert("Reached scanner from unknown route")})(type, data);
   }
 }

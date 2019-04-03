@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { SearchBar } from 'react-native-elements';
+import { SearchBar, Button } from 'react-native-elements';
+import { Ionicons } from '@expo/vector-icons';
 
 export default class ItemSearchBar extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export default class ItemSearchBar extends React.Component {
 
   render() {
     return (
+      <View style={styles.container}>
         <SearchBar
             platform="android"
             placeholder="Grocery Item Name Here"
@@ -19,14 +21,28 @@ export default class ItemSearchBar extends React.Component {
             value={this.state.search}
             onSubmitEditing={() => this.props.onSearch(this.state.search)}
             containerStyle={styles.input}/>
+        <Button
+            raised
+            icon={<Ionicons name="ios-camera" size={24} color={"white"}/>}
+            onPress={this.props.onPressCamera}
+            containerStyle={styles.scanbutton}
+          />
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  input: {
-    width: '100%',
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
     borderBottomColor: "lightgray",
     borderBottomWidth: 1
+  },
+  input: {
+    flex: 1,
+  },
+  scanbutton: {
+    height: 35,
   }
 });
