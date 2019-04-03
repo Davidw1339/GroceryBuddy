@@ -175,7 +175,7 @@ export default class SearchPage extends React.Component {
               onLongPress={() => this.deleteAlert(i)}
               leftAvatar={{ title: l.name, source: { uri: l.imageUrl } }}
               title={l.name}
-              rightTitle={'$' + this.state.stores[this.state.selectedStore].items[i].price}
+              rightTitle={'$' + Number(this.state.stores[this.state.selectedStore].items[i].price).toFixed(2)}
               bottomDivider
             />
           ))}
@@ -185,7 +185,7 @@ export default class SearchPage extends React.Component {
           <ListItem
             title={'Total (' + this.state.stores[this.state.selectedStore].items.length + ' items)'}
             subtitle={this.state.selectedStore}
-            rightTitle={'$' + this.calculateStoreTotal(this.state.selectedStore)}
+            rightTitle={'$' + Number(this.calculateStoreTotal(this.state.selectedStore)).toFixed(2)}
             topDivider
           />
         </View>

@@ -34,9 +34,9 @@ class ListItem extends React.PureComponent {
         }
       }
       if (maxPrice == minPrice) {
-        return '$' + minPrice;
+        return '$' + Number(minPrice).toFixed(2);
       } else {
-        return '$' + minPrice + ' - $' + maxPrice;
+        return '$' + Number(minPrice).toFixed(2) + ' - $' + Number(maxPrice).toFixed(2);
       }
     }
 
