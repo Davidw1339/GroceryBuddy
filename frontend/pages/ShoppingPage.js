@@ -3,6 +3,8 @@ import { View, StyleSheet, TouchableNativeFeedback, Image } from 'react-native';
 import { Text, CheckBox } from 'react-native-elements';
 import { votePrice } from '../utils/api';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
+import DeviceInfo from 'react-native-device-info';
+
 
 export default class ShoppingPage extends React.Component {
 
@@ -13,7 +15,8 @@ export default class ShoppingPage extends React.Component {
     };
   };
 
-    username = 'developer';
+    //Decided not to have users login, still need a unique identifier for downvotes to work
+    username = DeviceInfo.getMACAddress();
 
     constructor(props) {
         super(props);
