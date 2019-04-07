@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 import model
 import json
-import app
+from utils import Error
 
 search_blueprint = Blueprint("search", __name__)
 
@@ -21,4 +21,4 @@ def search():
     elif keyword:
         return model.Item.objects(name__icontains=keyword).to_json()
     else:
-        return json.dumps({'success': False, 'error': app.Error.MISSING_KEYWORD_UPC.value})
+        return json.dumps({'success': False, 'error': Error.MISSING_KEYWORD_UPC.value})

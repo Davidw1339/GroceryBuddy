@@ -1,5 +1,4 @@
 import pytest
-import app
 
 
 def test_hello_world(client):

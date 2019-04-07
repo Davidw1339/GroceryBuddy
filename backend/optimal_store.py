@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 import json
 import validation
-import app
+from utils import Error
 import mongoengine.errors
 import model
 
@@ -20,21 +20,21 @@ def get_optimal_store():
                               "price": total price of items associated with store}]
                     }
     """
-    error = app.Error.NO_ERROR.value
+    error = Error.NO_ERROR.value
     data = request.get_json(force=True)
     if data is None:
-        error = app.Error.INVALID_JSON.value
+        error = Error.INVALID_JSON.value
         return json.dumps({'success': False, 'error': error, 'optimal_prices': None})
 
     item_list = []
     items = data['items']
     if items is None:
-        error = app.Error.MISSING_UPC.value
+        error = Error.MISSING_UPC.value
         return json.dumps({'success': False, 'error': error, 'optimal_prices': None})
     for upc in items:
         result = model.Item.objects(upc=upc)
         if len(result) == 0:
-            error = app.Error.UPC_DNE.value
+            error = Error.UPC_DNE.value
         else:
             item_list.append(result.to_json())
 

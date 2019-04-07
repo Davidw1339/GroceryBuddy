@@ -1,7 +1,7 @@
 import pytest
 import json
 import model
-import app
+from utils import Error
 import test_data
 import validation
 
@@ -243,7 +243,7 @@ def test_invalid_unvote(client, existing_item):
         'dir': direction
     }))
     response = json.loads(rv.data)
-    assert response == {'success': False, 'error': app.Error.NOT_VOTED.value}
+    assert response == {'success': False, 'error': Error.NOT_VOTED.value}
 
 
 def test_double_upvote(client, existing_item):
@@ -280,7 +280,7 @@ def test_double_upvote(client, existing_item):
     }))
     response = json.loads(rv.data)
     assert response == {'success': False,
-                        'error': app.Error.ALREADY_UPVOTED.value}
+                        'error': Error.ALREADY_UPVOTED.value}
 
 
 def test_double_downvote(client, existing_item):
@@ -317,7 +317,7 @@ def test_double_downvote(client, existing_item):
     }))
     response = json.loads(rv.data)
     assert response == {'success': False,
-                        'error': app.Error.ALREADY_DOWNVOTED.value}
+                        'error': Error.ALREADY_DOWNVOTED.value}
 
 
 def test_nonexistent_item(client, nonexistent_item):
@@ -339,7 +339,7 @@ def test_nonexistent_item(client, nonexistent_item):
         'dir': direction
     }))
     response = json.loads(rv.data)
-    assert response == {'success': False, 'error': app.Error.ITEM_DNE.value}
+    assert response == {'success': False, 'error': Error.ITEM_DNE.value}
 
 
 def test_nonexistent_store(client, existing_item):
@@ -361,7 +361,7 @@ def test_nonexistent_store(client, existing_item):
         'dir': direction
     }))
     response = json.loads(rv.data)
-    assert response == {'success': False, 'error': app.Error.STORE_DNE.value}
+    assert response == {'success': False, 'error': Error.STORE_DNE.value}
 
 
 def test_missing_direction(client, existing_item):
@@ -382,7 +382,7 @@ def test_missing_direction(client, existing_item):
     }))
     response = json.loads(rv.data)
     assert response == {'success': False,
-                        'error': app.Error.MISSING_FIELDS.value}
+                        'error': Error.MISSING_FIELDS.value}
 
 
 def test_invalid_dir(client, existing_item):
@@ -404,7 +404,7 @@ def test_invalid_dir(client, existing_item):
         'dir': direction
     }))
     response = json.loads(rv.data)
-    assert response == {'success': False, 'error': app.Error.INVALID_DIR.value}
+    assert response == {'success': False, 'error': Error.INVALID_DIR.value}
 
 
 def test_invalid_user(client, existing_item):

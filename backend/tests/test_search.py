@@ -3,14 +3,14 @@ import json
 import search
 import test_data
 import copy
-import app
+from utils import Error
 
 
 def test_no_args(client):
     rv = client.get('/search')
     response = json.loads(rv.data)
     assert response == {'success': False,
-                        'error': app.Error.MISSING_KEYWORD_UPC.value}
+                        'error': Error.MISSING_KEYWORD_UPC.value}
 
 
 def test_extra_args(client):
@@ -19,7 +19,7 @@ def test_extra_args(client):
     }))
     response = json.loads(rv.data)
     assert response == {'success': False,
-                        'error': app.Error.MISSING_KEYWORD_UPC.value}
+                        'error': Error.MISSING_KEYWORD_UPC.value}
 
 
 def test_search_by_upc(client, existing_item):

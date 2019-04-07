@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from enum import Enum
 import json
 import validation
-import app
+from utils import Error
 import mongoengine.errors
 import model
 
@@ -32,32 +32,32 @@ def vote():
 
     required_fields = ['upc', 'user', 'store', 'lat', 'long', 'dir']
     if not validation.has_required(data, required_fields):
-        return json.dumps({'success': False, 'error': app.Error.MISSING_FIELDS.value})
+        return json.dumps({'success': False, 'error': Error.MISSING_FIELDS.value})
     if not validation.is_valid_dir(data['dir']):
-        return json.dumps({'success': False, 'error': app.Error.INVALID_DIR.value})
+        return json.dumps({'success': False, 'error': Error.INVALID_DIR.value})
 
     direction = Vote.from_int(data['dir'])
 
     item = model.Item.objects(upc=data['upc']).first()
     if item is None:
-        return json.dumps({'success': False, 'error': app.Error.ITEM_DNE.value})
+        return json.dumps({'success': False, 'error': Error.ITEM_DNE.value})
 
     loc = {'lat': data['lat'], 'long': data['long']}
     store = item.stores.filter(name=data['store'], location=loc).first()
     if store is None:
-        return json.dumps({'success': False, 'error': app.Error.STORE_DNE.value})
+        return json.dumps({'success': False, 'error': Error.STORE_DNE.value})
     else:
         price = store.prices[-1]
         if direction == Vote.UP:
             if data['user'] in price.upvotes:
-                return json.dumps({'success': False, 'error': app.Error.ALREADY_UPVOTED.value})
+                return json.dumps({'success': False, 'error': Error.ALREADY_UPVOTED.value})
             else:
                 price.upvotes.append(data['user'])
             if data['user'] in price.downvotes:
                 price.downvotes.remove(data['user'])
         elif direction == Vote.DOWN:
             if data['user'] in price.downvotes:
-                return json.dumps({'success': False, 'error': app.Error.ALREADY_DOWNVOTED.value})
+                return json.dumps({'success': False, 'error': Error.ALREADY_DOWNVOTED.value})
             else:
                 price.downvotes.append(data['user'])
             if data['user'] in price.upvotes:
@@ -68,7 +68,7 @@ def vote():
             elif data['user'] in price.downvotes:
                 price.downvotes.remove(data['user'])
             else:
-                return json.dumps({'success': False, 'error': app.Error.NOT_VOTED.value})
+                return json.dumps({'success': False, 'error': Error.NOT_VOTED.value})
 
     try:
         item.save()

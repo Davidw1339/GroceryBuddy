@@ -1,7 +1,6 @@
 from flask import Blueprint, request
 import json
 import validation
-import app
 import mongoengine.errors
 import model
 

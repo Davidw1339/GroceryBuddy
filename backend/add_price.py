@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-import app
+from utils import Error
 import validation
 import model
 import json
@@ -20,11 +20,11 @@ def add_price():
 
     required_fields = ['upc', 'price', 'user', 'store', 'lat', 'long']
     if not validation.has_required(data, required_fields):
-        return json.dumps({'success': False, 'error': app.Error.MISSING_FIELDS.value})
+        return json.dumps({'success': False, 'error': Error.MISSING_FIELDS.value})
 
     item = model.Item.objects(upc=data['upc']).first()
     if item is None:
-        return json.dumps({'success': False, 'error': app.Error.ITEM_DNE.value})
+        return json.dumps({'success': False, 'error': Error.ITEM_DNE.value})
 
     new_price = model.Price(
         user=data['user'],

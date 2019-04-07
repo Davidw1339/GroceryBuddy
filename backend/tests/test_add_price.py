@@ -1,6 +1,6 @@
 import pytest
 import json
-import app
+from utils import Error
 import model
 import test_data
 import validation
@@ -87,7 +87,7 @@ def test_nonexistent_item(client, nonexistent_item):
         'long': long_arg
     }))
     response = json.loads(rv.data)
-    assert response == {'success': False, 'error': app.Error.ITEM_DNE.value}
+    assert response == {'success': False, 'error': Error.ITEM_DNE.value}
 
 
 def test_missing_user(client, existing_item):
@@ -109,7 +109,7 @@ def test_missing_user(client, existing_item):
     }))
     response = json.loads(rv.data)
     assert response == {'success': False,
-                        'error': app.Error.MISSING_FIELDS.value}
+                        'error': Error.MISSING_FIELDS.value}
 
 
 def test_add_invalid_store(client, existing_item):
