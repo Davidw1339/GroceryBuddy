@@ -4,6 +4,7 @@ import validation
 import model
 import json
 import mongoengine.errors
+from datetime import datetime
 
 add_price_blueprint = Blueprint("add_price", __name__)
 
@@ -31,7 +32,7 @@ def add_price():
         upvotes=[],
         downvotes=[],
         price=data['price'],
-        date=request.date
+        date=datetime.now().timestamp()
     )
 
     loc = {'lat': data['lat'], 'long': data['long']}
