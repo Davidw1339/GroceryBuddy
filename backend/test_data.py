@@ -292,6 +292,28 @@ store13 = model.Store(
     ]
 )
 
+# missing lat
+store14 = model.Store(
+    name='Walmart',
+    location={
+        'long': 0
+    },
+    prices=[
+        price0,
+    ]
+)
+
+# missing long
+store15 = model.Store(
+    name='Target',
+    location={
+        'lat': 0
+    },
+    prices=[
+        price0,
+    ]
+)
+
 invalid_stores = [
     store4,
     store5,
@@ -300,7 +322,9 @@ invalid_stores = [
     store8,
     store9,
     store12,
-    store13
+    store13,
+    store14,
+    store15
 ]
 
 item0 = model.Item(
@@ -371,17 +395,31 @@ item5 = model.Item(
 )
 
 # stores: store with invalid lat
-item6 = model.Item(
+item9 = model.Item(
     name='Food',
     upc='881132924239',
     stores=[store12]
 )
 
-# stores: store with invalid lat
-item6 = model.Item(
+# stores: store with invalid long
+item10 = model.Item(
     name='Milk',
     upc='881135924239',
     stores=[store13]
+)
+
+# stores: store with missing lat
+item11 = model.Item(
+    name='Eggs',
+    upc='881132924209',
+    stores=[store14]
+)
+
+# stores: store with missing long
+item12 = model.Item(
+    name='Toy',
+    upc='881135924739',
+    stores=[store15]
 )
 
 invalid_items = [
@@ -389,6 +427,8 @@ invalid_items = [
     item3,
     item4,
     item5,
-    item6,
-    item7
+    item9,
+    item10,
+    item11,
+    item12
 ]

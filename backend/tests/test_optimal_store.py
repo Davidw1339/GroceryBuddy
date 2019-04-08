@@ -23,7 +23,7 @@ def test_invalid_upc(db, client):
     assert response['success'] is True
     assert response['error'] == Error.UPC_DNE.value
     assert len(response['optimal_prices']) == 1
-    assert len(response['optimal_prices'][0]['upcs']) == (len(upcs) - 1)
+    assert len(response['optimal_prices'][0]['upcs']) == (len(upcs) - 2)
 
 
 def test_single_store(db, client):
@@ -42,7 +42,7 @@ def test_single_store(db, client):
     response = json.loads(rv.data)
     assert response['success'] is True
     assert len(response['optimal_prices']) == 1
-    assert len(response['optimal_prices'][0]['upcs']) == (len(upcs))
+    assert len(response['optimal_prices'][0]['upcs']) == (len(upcs) - 1)
 
 
 def test_multiple_stores(db, client):
@@ -63,3 +63,27 @@ def test_multiple_stores(db, client):
     assert len(response['optimal_prices']) >= 1
     assert sum(len(dct['upcs'])
                for dct in response['optimal_prices']) == len(upcs)
+
+
+def test_no_data(db, client):
+    for item in valid_items:
+        copy.deepcopy(item).save()
+
+    rv = client.post('/optimal_store')
+    response = json.loads(rv.data)
+    assert response['success'] is False
+    assert response['error'] == Error.INVALID_JSON.value
+    assert response['optimal_prices'] is None
+
+
+def test_no_items(db, client):
+    for item in valid_items:
+        copy.deepcopy(item).save()
+
+    rv = client.post('/optimal_store', data=json.dumps({
+        'single_store': True
+    }))
+    response = json.loads(rv.data)
+    assert response['success'] is False
+    assert response['error'] == Error.MISSING_UPC.value
+    assert response['optimal_prices'] is None

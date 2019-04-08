@@ -21,14 +21,15 @@ def get_optimal_store():
                     }
     """
     error = Error.NO_ERROR.value
-    data = request.get_json(force=True)
+    data = request.get_json(force=True, silent=True)
     if data is None:
         error = Error.INVALID_JSON.value
         return json.dumps({'success': False, 'error': error, 'optimal_prices': None})
 
     item_list = []
-    items = data['items']
-    if items is None:
+    try:
+        items = data['items']
+    except KeyError:
         error = Error.MISSING_UPC.value
         return json.dumps({'success': False, 'error': error, 'optimal_prices': None})
     for upc in items:

@@ -1,6 +1,7 @@
 from validation import *
 import pytest
 
+
 def test_valid_location():
     loc = {
         'lat': 0,
@@ -35,7 +36,7 @@ def test_invalid_location_too_many_fields():
     try:
         validate_location(loc)
     except LocationValidationException as e:
-        err_msg=  e.__str__()
+        err_msg = e.__str__()
     assert err_msg == LocationValidationException.INCORRECT_FIELD_ERROR
 
 
@@ -58,7 +59,7 @@ def test_invalid_location_lat():
     try:
         validate_location(loc)
     except LocationValidationException as e:
-         err_msg = e.__str__()
+        err_msg = e.__str__()
     assert err_msg == LocationValidationException.INVALID_LAT_VALUE_ERROR
 
 
@@ -73,6 +74,32 @@ def test_invalid_location_long():
     except LocationValidationException as e:
         err_msg = e.__str__()
     assert err_msg == LocationValidationException.INVALID_LONG_VALUE_ERROR
+
+
+def test_missing_lat():
+    loc = {
+        'latt': 0,
+        'long': 90
+    }
+    err_msg = None
+    try:
+        validate_location(loc)
+    except LocationValidationException as e:
+        err_msg = e.__str__()
+    assert err_msg == LocationValidationException.MISSING_LAT_FIELD_ERROR
+
+
+def test_missing_long():
+    loc = {
+        'lat': 0,
+        'lon': 90
+    }
+    err_msg = None
+    try:
+        validate_location(loc)
+    except LocationValidationException as e:
+        err_msg = e.__str__()
+    assert err_msg == LocationValidationException.MISSING_LONG_FIELD_ERROR
 
 
 # UPC test
