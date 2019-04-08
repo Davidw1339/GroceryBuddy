@@ -173,12 +173,26 @@ store10 = model.Store(
     ]
 )
 
+store11 = model.Store(
+    name='Safeway',
+    location={
+        'lat': 40.1516,
+        'long': -88.2273
+    },
+    prices=[
+        price0,
+        price2,
+        price1,
+    ]
+)
+
 # array of valid stores
 valid_stores = [
     store0,
     store1,
     store2,
     store3,
+    store11
 ]
 
 # name: name too long
@@ -254,6 +268,30 @@ store9 = model.Store(
     prices=None
 )
 
+# invalid lat type
+store12 = model.Store(
+    name='Walmart',
+    location={
+        'lat': 'hi',
+        'long': 0
+    },
+    prices=[
+        price0,
+    ]
+)
+
+# invalid long type
+store13 = model.Store(
+    name='Target',
+    location={
+        'lat': 0,
+        'long': 'hi'
+    },
+    prices=[
+        price0,
+    ]
+)
+
 invalid_stores = [
     store4,
     store5,
@@ -261,6 +299,8 @@ invalid_stores = [
     store7,
     store8,
     store9,
+    store12,
+    store13
 ]
 
 item0 = model.Item(
@@ -330,9 +370,25 @@ item5 = model.Item(
     stores=invalid_stores
 )
 
+# stores: store with invalid lat
+item6 = model.Item(
+    name='Food',
+    upc='881132924239',
+    stores=[store12]
+)
+
+# stores: store with invalid lat
+item6 = model.Item(
+    name='Milk',
+    upc='881135924239',
+    stores=[store13]
+)
+
 invalid_items = [
     item2,
     item3,
     item4,
-    item5
+    item5,
+    item6,
+    item7
 ]

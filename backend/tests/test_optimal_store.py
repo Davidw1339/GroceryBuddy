@@ -23,7 +23,7 @@ def test_invalid_upc(db, client):
     assert response['success'] is True
     assert response['error'] == Error.UPC_DNE.value
     assert len(response['optimal_prices']) == 1
-    assert len(response['optimal_prices'][0]['upcs']) == (len(upcs) - 2)
+    assert len(response['optimal_prices'][0]['upcs']) == (len(upcs) - 1)
 
 
 def test_single_store(db, client):
@@ -42,7 +42,7 @@ def test_single_store(db, client):
     response = json.loads(rv.data)
     assert response['success'] is True
     assert len(response['optimal_prices']) == 1
-    assert len(response['optimal_prices'][0]['upcs']) == (len(upcs) - 1)
+    assert len(response['optimal_prices'][0]['upcs']) == (len(upcs))
 
 
 def test_multiple_stores(db, client):

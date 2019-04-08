@@ -41,10 +41,12 @@ def validate_location(loc):
     if 'long' not in loc:
         raise LocationValidationException(
             LocationValidationException.MISSING_LONG_FIELD_ERROR)
-    if loc['lat'] < -90 or loc['lat'] > 90:
+    if ((type(loc['lat']) is not float and type(loc['lat']) is not int)
+            or loc['lat'] < -90 or loc['lat'] > 90):
         raise LocationValidationException(
             LocationValidationException.INVALID_LAT_VALUE_ERROR)
-    if loc['long'] < -180 or loc['long'] > 180:
+    if ((type(loc['long']) is not float and type(loc['long']) is not int)
+            or loc['long'] < -180 or loc['long'] > 180):
         raise LocationValidationException(
             LocationValidationException.INVALID_LONG_VALUE_ERROR)
 
