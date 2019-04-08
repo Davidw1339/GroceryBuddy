@@ -132,12 +132,22 @@ export default class SearchResultsPage extends React.Component {
                 data={this.state.searchResults}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderItem}/>
-            <View style = {styles.ghostItemContainer}>
-              <View style = {styles.separator}/>
-              <ListItem
-                item={{name: "+ Add Other Item"}}
-                onPressItem={() => {this.props.navigation.navigate("AddItem")}}/>
-            </View>
+            {/* Add other item button */}
+            <TouchableHighlight 
+              style = {styles.ghostItemContainer}
+              onPress={() => {this.props.navigation.navigate("AddItem")}}
+              underlayColor='#dddddd'>
+              <View>
+                <View style = {styles.separator}/>
+                <View>
+                  <View style={styles.rowContainer}>
+                    <View style={[styles.textContainer, styles.addItemTextContainer]}>
+                      <Text style={[styles.title, styles.addItemText]}>+ Add Other Item</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </TouchableHighlight>
           </View>
         );
     }
@@ -151,6 +161,12 @@ const styles = StyleSheet.create({
     },
     textContainer: {
       flex: 1
+    },
+    addItemTextContainer: {
+      paddingBottom: 20
+    },
+    addItemText: {
+      textAlign: 'center'
     },
     separator: {
       height: 1,
@@ -173,7 +189,6 @@ const styles = StyleSheet.create({
     ghostItemContainer: {
       justifyContent: 'flex-end',
       backgroundColor: 'white',
-      alignItems: 'center'
     },
     resultsContainer: {
       flex: 1
