@@ -15,20 +15,20 @@ def upload_items(data):
     '''
     Uploads given item data to the database
     '''
-    for obj in data:
+    for i, obj in enumerate(data):
         r = requests.post(
             'https://grocerybuddybackend.azurewebsites.net/item', json=obj)
-        print(r.status_code)
+        print(i, r.text)
 
 
 def upload_prices(data):
     '''
     Uploads given price data to the database
     '''
-    for obj in data:
+    for i, obj in enumerate(data):
         r = requests.post(
             'https://grocerybuddybackend.azurewebsites.net/price', json=obj)
-        print(r.status_code)
+        print(i, r.text)
 
 
 def direct_upload():
