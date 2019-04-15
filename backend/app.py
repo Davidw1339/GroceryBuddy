@@ -13,6 +13,7 @@ from add_price import add_price_blueprint
 from vote import vote_blueprint
 from optimal_store import optimal_store_blueprint
 from hello_world import hello_world_blueprint
+from get_image import get_image_blueprint
 
 
 app = Flask(__name__)
@@ -22,6 +23,7 @@ app.register_blueprint(add_price_blueprint)
 app.register_blueprint(vote_blueprint)
 app.register_blueprint(optimal_store_blueprint)
 app.register_blueprint(hello_world_blueprint)
+app.register_blueprint(get_image_blueprint)
 
 try:
     connect('grocery-db', host=environ['MONGO_HOST'])

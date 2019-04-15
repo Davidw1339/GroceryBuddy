@@ -1,5 +1,5 @@
 from mongoengine import (EmbeddedDocument, StringField, IntField, DecimalField,
-                         DateTimeField, DictField, ListField, EmbeddedDocumentListField, Document)
+                         DateTimeField, BinaryField, DictField, ListField, EmbeddedDocumentListField, Document)
 import validation
 
 
@@ -24,4 +24,5 @@ class Item(Document):
     upc.validate = validation.validate_upc
     name = StringField(min_length=1, max_length=64, required=True)
     image_url = StringField(min_length=0, max_length=512)
+    image = BinaryField()
     stores = EmbeddedDocumentListField(Store, required=True)

@@ -5,14 +5,33 @@ import validation
 from datetime import datetime
 import mongoengine.errors
 from utils import Error
+import base64
+from os import environ
 
 add_item_blueprint = Blueprint("add_item", __name__)
+
+
+def add_image(image_b64, item):
+    '''
+    Adds an image to the database.
+    image_b64 should be a string of an image encoded in Base64.
+    item should be the Item object to save under.
+    '''
+    raw_image = base64.b64decode(image_b64)
+    item.image = raw_image
+
+    try:
+        base_url = environ['HOST_URL']
+    except KeyError:
+        # Default to localhost
+        base_url = '127.0.0.1'
+    item.image_url = base_url + '/get_image?upc=' + item.upc
 
 
 @add_item_blueprint.route('/item', methods=['POST'])
 def add_item():
     '''
-        Body: {"name", "upc", "price", "user", "store", "lat", "long"[, "image_url"]}
+        Body: {"name", "upc", "price", "user", "store", "lat", "long"[, "image", "image_url"]}
         Response:
             - {"success": true or false},
             - {"error": error description}
@@ -26,11 +45,6 @@ def add_item():
     lookup = model.Item.objects(upc=data['upc']).first()
     if lookup is not None:
         return json.dumps({'success': False, 'error': Error.ITEM_EXISTS.value})
-
-    if 'image_url' in data:
-        image_url = data['image_url']
-    else:
-        image_url = ''
 
     new_price = model.Price(
         user=data['user'],
@@ -50,9 +64,15 @@ def add_item():
     new_item = model.Item(
         upc=data['upc'],
         name=data['name'],
-        image_url=image_url,
+        image_url='',
+        image=None,
         stores=[new_store]
     )
+
+    if 'image' in data:
+        add_image(data['image'], new_item)
+    elif 'image_url' in data:
+        new_item.image_url = data['image_url']
 
     try:
         new_item.save()

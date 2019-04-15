@@ -17,8 +17,8 @@ def search():
     upc = request.args.get('upc')
     keyword = request.args.get('keyword')
     if upc:
-        return model.Item.objects(upc=upc).to_json()
+        return model.Item.objects(upc=upc).exclude('image').to_json()
     elif keyword:
-        return model.Item.objects(name__icontains=keyword).to_json()
+        return model.Item.objects(name__icontains=keyword).exclude('image').to_json()
     else:
         return json.dumps({'success': False, 'error': Error.MISSING_KEYWORD_UPC.value})

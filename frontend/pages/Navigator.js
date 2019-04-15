@@ -24,7 +24,10 @@ const StackNavigator = createStackNavigator({
     screen: ShoppingPage
   },
   AddItem: {
-    screen: AddItemPage
+    screen: AddItemPage,
+    navigationOptions: {
+      title: "Add Item"
+    }
   },
   Details: {
     screen: DetailedViewPage

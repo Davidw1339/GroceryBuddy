@@ -14,4 +14,5 @@ class Error(Enum):
     INVALID_JSON = 'Could not parse JSON body'
     MISSING_UPC = 'No UPCs provided'
     UPC_DNE = 'Some UPCs provided were not found in the database'
+    NO_IMAGE = 'No image uploaded for requested UPC'
     NO_ERROR = None

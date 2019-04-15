@@ -13,6 +13,7 @@ const formatGroceryItemAdd = (formData) => {
         "price": parseFloat(formData.price),
         "user": formData.user,
         "store": formData.store,
+        "image": formData.image,
         "lat": parseFloat(formData.lat),
         "long": parseFloat(formData.long)
     }

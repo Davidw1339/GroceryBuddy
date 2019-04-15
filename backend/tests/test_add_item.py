@@ -4,13 +4,15 @@ import add_item
 import model
 import test_data
 from utils import Error
+import base64
 
 
-def test_add_new_item(client, nonexistent_item):
-    name = str(nonexistent_item.name)
-    upc = str(nonexistent_item.upc)
+def test_add_new_item(client, nonexistent_item, db):
+    new_item = nonexistent_item
+    name = str(new_item.name)
+    upc = str(new_item.upc)
 
-    store = nonexistent_item.stores[0]
+    store = new_item.stores[0]
     store_name = str(store.name)
     lat = float(store.location['lat'])
     long_arg = float(store.location['long'])
@@ -44,16 +46,14 @@ def test_add_new_item(client, nonexistent_item):
     assert new_price.downvotes == []
 
 
-def test_add_new_item_with_image(client):
-    nonexistent_item = test_data.item8
-    assert model.Item.objects(upc=nonexistent_item.upc).count(
-    ) == 0, 'Test item was not cleared from database after previous test'
+def test_add_new_item_with_image_url(client, db):
+    new_item = test_data.item8
 
-    name = str(nonexistent_item.name)
-    upc = str(nonexistent_item.upc)
-    image_url = str(nonexistent_item.image_url)
+    name = str(new_item.name)
+    upc = str(new_item.upc)
+    image_url = str(new_item.image_url)
 
-    store = nonexistent_item.stores[0]
+    store = new_item.stores[0]
     store_name = str(store.name)
     lat = float(store.location['lat'])
     long_arg = float(store.location['long'])
@@ -89,6 +89,102 @@ def test_add_new_item_with_image(client):
     assert new_price.downvotes == []
 
 
+def test_add_new_item_with_image(client, db):
+    new_item = test_data.item13
+
+    name = str(new_item.name)
+    upc = str(new_item.upc)
+    image = str(base64.b64encode(new_item.image))
+
+    store = new_item.stores[0]
+    store_name = str(store.name)
+    lat = float(store.location['lat'])
+    long_arg = float(store.location['long'])
+
+    price_data = store.prices[0]
+    price = float(price_data.price)
+    user = str(price_data.user)
+
+    rv = client.post('/item', data=json.dumps({
+        'name': name,
+        'upc': upc,
+        'price': price,
+        'user': user,
+        'store': store_name,
+        'lat': lat,
+        'long': long_arg,
+        'image': image
+    }))
+    response = json.loads(rv.data)
+    assert response == {'success': True, 'error': None}
+
+    new_item = model.Item.objects(
+        upc=upc).first()
+    assert str(new_item.name) == name
+    new_store = new_item.stores[0]
+    assert str(new_store.name) == store_name
+    assert float(new_store.location['lat']) == lat
+    assert float(new_store.location['long']) == long_arg
+    new_price = new_store.prices[0]
+    assert float(new_price.price) == price
+    assert new_price.upvotes == []
+    assert new_price.downvotes == []
+
+    assert new_item.image is not None
+    # Check substring in image_url
+    assert new_item.image_url.find('/get_image?upc=' + new_item.upc) != -1
+
+
+def test_add_new_item_image_over_url(client, db):
+    '''
+    Test that the image field has priority over image_url
+    '''
+    new_item = test_data.item13
+
+    name = str(new_item.name)
+    upc = str(new_item.upc)
+    image = str(base64.b64encode(new_item.image))
+
+    store = new_item.stores[0]
+    store_name = str(store.name)
+    lat = float(store.location['lat'])
+    long_arg = float(store.location['long'])
+
+    price_data = store.prices[0]
+    price = float(price_data.price)
+    user = str(price_data.user)
+
+    rv = client.post('/item', data=json.dumps({
+        'name': name,
+        'upc': upc,
+        'price': price,
+        'user': user,
+        'store': store_name,
+        'lat': lat,
+        'long': long_arg,
+        'image': image,
+        'image_url': 'Invalid URL'
+    }))
+    response = json.loads(rv.data)
+    assert response == {'success': True, 'error': None}
+
+    new_item = model.Item.objects(
+        upc=upc).first()
+    assert str(new_item.name) == name
+    new_store = new_item.stores[0]
+    assert str(new_store.name) == store_name
+    assert float(new_store.location['lat']) == lat
+    assert float(new_store.location['long']) == long_arg
+    new_price = new_store.prices[0]
+    assert float(new_price.price) == price
+    assert new_price.upvotes == []
+    assert new_price.downvotes == []
+
+    assert new_item.image is not None
+    # Check substring in image_url
+    assert new_item.image_url.find('/get_image?upc=' + new_item.upc) != -1
+
+
 def test_existing_item(client, existing_item):
     name = str(existing_item.name)
     upc = str(existing_item.upc)
@@ -117,10 +213,11 @@ def test_existing_item(client, existing_item):
 
 
 def test_partial_item(client, nonexistent_item):
-    name = str(nonexistent_item.name)
-    upc = str(nonexistent_item.upc)
+    new_item = nonexistent_item
+    name = str(new_item.name)
+    upc = str(new_item.upc)
 
-    store = nonexistent_item.stores[0]
+    store = new_item.stores[0]
     store_name = str(store.name)
     lat = float(store.location['lat'])
     long_arg = float(store.location['long'])
@@ -141,11 +238,12 @@ def test_partial_item(client, nonexistent_item):
                         'error': Error.MISSING_FIELDS.value}
 
 
-def test_invalid_price(client, nonexistent_item):
-    name = str(nonexistent_item.name)
-    upc = str(nonexistent_item.upc)
+def test_invalid_price(client, nonexistent_item, db):
+    new_item = nonexistent_item
+    name = str(new_item.name)
+    upc = str(new_item.upc)
 
-    store = nonexistent_item.stores[0]
+    store = new_item.stores[0]
     store_name = str(store.name)
     lat = float(store.location['lat'])
     long_arg = float(store.location['long'])
