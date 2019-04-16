@@ -15,4 +15,5 @@ class Error(Enum):
     MISSING_UPC = 'No UPCs provided'
     UPC_DNE = 'Some UPCs provided were not found in the database'
     NO_IMAGE = 'No image uploaded for requested UPC'
+    INVALID_LIMIT = 'Limit argument was not a positive integer'
     NO_ERROR = None
