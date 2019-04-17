@@ -8,6 +8,7 @@ from os import environ
 from datetime import datetime
 
 from search import search_blueprint
+from search_gps import search_gps_blueprint
 from add_item import add_item_blueprint
 from add_price import add_price_blueprint
 from vote import vote_blueprint
@@ -18,6 +19,7 @@ from get_image import get_image_blueprint
 
 app = Flask(__name__)
 app.register_blueprint(search_blueprint)
+app.register_blueprint(search_gps_blueprint)
 app.register_blueprint(add_item_blueprint)
 app.register_blueprint(add_price_blueprint)
 app.register_blueprint(vote_blueprint)

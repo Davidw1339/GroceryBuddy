@@ -132,8 +132,8 @@ store0 = model.Store(
 store1 = model.Store(
     name='County Market',
     location={
-        'lat': 0,
-        'long': 0
+        'lat': 10,
+        'long': 10
     },
     prices=valid_prices
 )
@@ -142,8 +142,8 @@ store1 = model.Store(
 store2 = model.Store(
     name='Target',
     location={
-        'lat': 0,
-        'long': 0
+        'lat': .01,
+        'long': .01
     },
     prices=valid_prices[::-1]
 )
@@ -152,8 +152,8 @@ store2 = model.Store(
 store3 = model.Store(
     name='Meijer',
     location={
-        'lat': 0,
-        'long': 0
+        'lat': 30,
+        'long': 30
     },
     prices=[
         price0,
