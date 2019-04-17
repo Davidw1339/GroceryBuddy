@@ -123,3 +123,28 @@ export const votePrice = (voteDirection, user, upc, storeObj) => {
         console.log(error);
     })
 } 
+
+export const getUserId = () => {
+    return AsyncStorage.getItem('UserId')
+        .then((result) => {
+            if (result === null) {
+                var userid = "";
+                var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+                for (var i = 0; i < 20; i++)
+                    userid += possible.charAt(Math.floor(Math.random() * possible.length));
+                AsyncStorage.setItem('UserId', userid)
+                    .then(() => {return userid})
+                    .catch((error) => {
+                        console.log("ERROR STORING USERID: " + error);
+                        return userid;
+                })
+                return userid;
+            }
+            return result;
+        })
+        .catch((error) => {
+            console.log("ERROR RETRIEVING USERID: " + error);
+            return 'admin';
+        })
+}
