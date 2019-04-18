@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Alert, TouchableNativeFeedback, TouchableHighlight } from 'react-native';
+
+import { View, StyleSheet, Alert, TouchableNativeFeedback, TouchableHighlight, FlatList, Card, Platform } from 'react-native';
 import ItemSearchBar from '../components/ItemSearchBar';
-import { Text, ListItem, Button } from 'react-native-elements';
-import { Platform } from 'react-native'
+import { Text, ListItem, Button, Avatar, Icon, Badge } from 'react-native-elements';
+import Collapsible from 'react-native-collapsible';
 
 export default class SearchPage extends React.Component {
 
@@ -17,24 +18,17 @@ export default class SearchPage extends React.Component {
     this.state = {
       stores: {},
       selectedStore: '',
+      isCollapsed: true
     }
-  }
-
-  componentDidMount() {
-
   }
 
   addItem = (item) => {
     console.log("ADDING ITEM")
+    console.log(item)
     newStores = Object.assign({}, this.state.stores);
 
-    // set universal parameters for item
-    strippedItem = {
-      name: item.name,
-      imageUrl: item.image_url,
-      upc: item.upc,
-      quantity: 1
-    }
+    cheapestPrice = Number.MAX_VALUE;
+    cheapestItem = null;
 
     for (let i = 0; i < item.stores.length; i++) {
       storeName = item.stores[i].name
@@ -45,14 +39,30 @@ export default class SearchPage extends React.Component {
         newStores[storeName].lat = item.stores[i].location.lat
         newStores[storeName].long = item.stores[i].location.long
       }
+
+      // set universal parameters for item
+      strippedItem = {
+        name: item.name,
+        imageUrl: item.image_url,
+        upc: item.upc,
+        quantity: 1,
+        cheapest: false
+      }
+      
       // set store specific parameters
       currentPrice = item.stores[i].prices[0]
       strippedItem.price = currentPrice.price
       strippedItem.upvotes = currentPrice.upvotes
       strippedItem.downvotes = currentPrice.downvotes
 
+      if (strippedItem.price < cheapestPrice) {
+        cheapestPrice = strippedItem.price;
+        cheapestItem = strippedItem;
+      }
       newStores[storeName].items.push(strippedItem)
     }
+
+    cheapestItem.cheapest = true;
 
     this.setState({stores: newStores}, () => {this.recalculateTotals()})
   }
@@ -82,6 +92,12 @@ export default class SearchPage extends React.Component {
     console.log('Got cheapest store: ' + cheapestStore)
     this.setState({
       selectedStore: cheapestStore,
+    })
+  }
+
+  selectStore = (store) => {
+    this.setState({
+      selectedStore: store
     })
   }
 
@@ -142,6 +158,11 @@ export default class SearchPage extends React.Component {
     })
   }
 
+  _onOpenCompare = () => {
+    this.setState({isCollapsed: !this.state.isCollapsed});
+  }
+
+
   render() {
     let TouchablePlatformSpecific = Platform.OS === 'ios' ? 
       TouchableHighlight : 
@@ -188,18 +209,48 @@ export default class SearchPage extends React.Component {
                 leftAvatar={{ title: l.name, source: { uri: l.imageUrl } }}
                 title={l.name}
                 rightTitle={'$' + Number(this.state.stores[this.state.selectedStore].items[i].price).toFixed(2)}
+                rightTitleStyle={{color: this.state.stores[this.state.selectedStore].items[i].cheapest ? 'green': 'black'}}
                 bottomDivider
               />
             ))}
           </View>
 
           <View style={styles.footer}>
+            <Icon name={this.state.isCollapsed ? 'expand-less' : 'expand-more'} type='material'/>
             <ListItem
               title={'Total (' + this.state.stores[this.state.selectedStore].items.length + ' items)'}
               subtitle={this.state.selectedStore}
               rightTitle={'$' + Number(this.calculateStoreTotal(this.state.selectedStore)).toFixed(2)}
               topDivider
+              onPress={this._onOpenCompare}
             />
+
+            <Collapsible collapsed={this.state.isCollapsed} duration={100} style={{height: 140}}>
+              <View style={styles.horizontalRow}>
+              {Object.keys(this.state.stores).map((key, index) => (
+                <View key={key}>
+                  <Avatar
+                    size="large"
+                    overlayContainerStyle={this.state.selectedStore == key ? { borderWidth: 3, borderColor: 'green' } : { backgroundColor: '#BDBDBD' }}
+                    rounded
+                    onPress={() => this.selectStore(key)}
+                    source={{
+                      uri: storeLogos[key],
+                    }}
+                  />
+                  {this.state.selectedStore == key &&
+                    <Badge
+                      status="success"
+                      containerStyle={{ position: 'absolute', top: -2, right: -2 }}
+                    />
+                  }
+                  <Text style={styles.subtitle}>
+                    {'$' + Number(this.calculateStoreTotal(key)).toFixed(2)}
+                  </Text>
+                </View>
+            ))} 
+              </View>
+            </Collapsible>
           </View>
           <View>
             <Button
@@ -213,10 +264,16 @@ export default class SearchPage extends React.Component {
               onPress={this.launchShopping}
             />
           </View>
-
         </View> 
     )
    };
+}
+
+const storeLogos = {
+  'Schnucks': 'https://d2d8wwwkmhfcva.cloudfront.net/195x/d2lnr5mha7bycj.cloudfront.net/warehouse/logo/216/9154d284-86de-4383-a73b-5779ace514f0.png',
+  'Aldi': 'https://corporate.aldi.us/fileadmin/_processed_/7/6/csm_aldi_logo_2017_bd4f8371bc.jpg',
+  'Harvest Market': 'https://scontent-ort2-2.xx.fbcdn.net/v/t31.0-8/13613392_151339761940766_246331264216770468_o.jpg?_nc_cat=103&_nc_ht=scontent-ort2-2.xx&oh=2d7694bfebaa768125b7be75ea4424b7&oe=5D412F44',
+  'County Market': 'https://scontent-ort2-2.xx.fbcdn.net/v/t1.0-9/15803_580000272016261_661242806_n.jpg?_nc_cat=104&_nc_ht=scontent-ort2-2.xx&oh=6e3a82481fb7828bbee37ae90904dc65&oe=5D2B2E5F'
 }
 
 const styles = StyleSheet.create({
@@ -228,5 +285,15 @@ const styles = StyleSheet.create({
   footer: {
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  horizontalRow: {
+    padding: 15, 
+    flex: 1, 
+    flexDirection: 'row', 
+    justifyContent: 'space-evenly'
+  },
+  subtitle: {
+    textAlign: 'center',
+    paddingTop: 10
   }
 });

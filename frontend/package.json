@@ -24,6 +24,7 @@
     "react-native-view-transformer": "0.0.28",
     "react-navigation": "^3.8.1",
     "react-test-renderer": "^16.8.1",
+    "react-native-collapsible": "^1.4.0",
     "yarn": "^1.13.0"
   },
   "devDependencies": {
