@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { AsyncStorage } from 'react-native';
 
-const BACKEND_URL = 'http://grocerybuddy.eastus.cloudapp.azure.com';
+const BACKEND_URL = 'https://grocerybuddybackend.azurewebsites.net'
 
 /*
 Takes in form data from component and casts values to match intended request
@@ -13,9 +13,9 @@ const formatGroceryItemAdd = (formData) => {
         "price": parseFloat(formData.price),
         "user": formData.user,
         "store": formData.store,
-        "image": formData.image,
         "lat": parseFloat(formData.lat),
-        "long": parseFloat(formData.long)
+        "long": parseFloat(formData.long),
+        "image": formData.image
     }
 };
 
@@ -40,7 +40,7 @@ Response:
 export const addGroceryItem = (formData) => {
     const ROUTE = '/item';
     console.log("we are submitting");
-    postToAPI(JSON.stringify(formatGroceryItemAdd(formData)), ROUTE);
+    return postToAPI(JSON.stringify(formatGroceryItemAdd(formData)), ROUTE);
 };
 
 
@@ -69,6 +69,16 @@ const postToAPI = (body, route) => {
         });
 };
 
+
+export const getNearestStores = (latitude, longitude, miles) => {
+    const ROUTE = '/search_gps?lat=' + latitude.toString() + '&long=' + longitude.toString() + '&miles=' + miles.toString();
+    console.log(BACKEND_URL + ROUTE);
+    return fetch(BACKEND_URL + ROUTE, {
+        method: "GET"
+    })
+    .then(res => res.json())
+    .catch(error => console.error(error));
+}
 
 export const searchForItem = (keyword) => {
     const ROUTE = '/search?keyword=' + keyword
