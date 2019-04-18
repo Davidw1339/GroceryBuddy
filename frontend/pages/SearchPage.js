@@ -199,7 +199,7 @@ export default class SearchPage extends React.Component {
 
   // This function will be called when a bar code is scanned, simply navigates to search results page
   handleBarCodeScanned = (type, data) => {
-    this.submitSearch(null, data);
+    this.submitSearch("", data);
   }
 
   // This function is called when the scan button (camera button) is pressed
@@ -260,7 +260,7 @@ export default class SearchPage extends React.Component {
 
     return (
         <View style={styles.container}>
-          <ItemSearchBar onSearch={this.submitSearch} />
+          <ItemSearchBar onSearch={this.submitSearch} onPressCamera={this.scanBarCode}/>
 
           <ScrollView>
             {this.state.stores[this.state.selectedStore].items.map((l, i) => (
