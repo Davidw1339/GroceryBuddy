@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { AsyncStorage } from 'react-native';
 
-const BACKEND_URL = 'http://grocerybuddy.eastus.cloudapp.azure.com'
+const BACKEND_URL = 'http://grocerybuddy.eastus.cloudapp.azure.com';
 
 /*
 Takes in form data from component and casts values to match intended request
@@ -17,7 +17,19 @@ const formatGroceryItemAdd = (formData) => {
         "lat": parseFloat(formData.lat),
         "long": parseFloat(formData.long)
     }
-}
+};
+
+
+/*
+Takes in form data from component and adds price to db
+*/
+export const addPrice = (formData) => {
+    const ROUTE = '/price';
+    console.log(formData);
+    postToAPI(JSON.stringify(formData), ROUTE);
+};
+
+
 
 /*
 Body: {"name", "upc", "price", "user", "store", "lat", "long"}
@@ -28,21 +40,35 @@ Response:
 export const addGroceryItem = (formData) => {
     const ROUTE = '/item';
     console.log("we are submitting");
-    return fetch(BACKEND_URL + ROUTE, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(formatGroceryItemAdd(formData))
+    postToAPI(JSON.stringify(formatGroceryItemAdd(formData)), ROUTE);
+};
+
+
+
+/*
+    Method that posts data to the backend
+    params:
+    @body: string body of request
+    @route: RESTFul route appended to base url
+ */
+const postToAPI = (body, route) => {
+    return fetch(BACKEND_URL + route, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: body
     })
-    .then(response => response.json())
-    .then(json => {
-        console.log(json);
-    })
-    .catch((error) => {
-        console.log(error);
-    })
-}
+        .then(response => {
+            let jsonResp = response.json();
+            console.log(jsonResp);
+            return jsonResp;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+
 
 export const searchForItem = (keyword) => {
     const ROUTE = '/search?keyword=' + keyword
@@ -52,7 +78,7 @@ export const searchForItem = (keyword) => {
     })
     .then(res => res.json())
     .catch(error => console.error(error));
-}
+};
 
 export const searchByUPC = (upc) => {
     const ROUTE = `${BACKEND_URL}/search?upc=${upc}`;
@@ -75,7 +101,7 @@ export const getLists = () => {
         console.log("ERROR RETRIEVING LISTS: " + error);
         return [];
     })
-}
+};
 
 export const addList = (currentLists, listName) => {
     const newList = [
@@ -89,15 +115,15 @@ export const addList = (currentLists, listName) => {
     .catch((error) => {
         console.log("ERROR ADDING NEW LIST: " + error);
     })
-}
+};
 
 export const deleteList = (currentLists, listId) => {
-    currentLists.splice(listId, 1)
+    currentLists.splice(listId, 1);
     return AsyncStorage.setItem('Lists', JSON.stringify(currentLists))
     .catch((error) => {
         console.log("ERROR DELETING LIST: " + error);
     })
-}
+};
 
 export const votePrice = (voteDirection, user, upc, storeObj) => {
     const ROUTE = '/vote';
@@ -122,7 +148,8 @@ export const votePrice = (voteDirection, user, upc, storeObj) => {
     .catch((error) => {
         console.log(error);
     })
-} 
+};
+
 
 export const getUserId = () => {
     return AsyncStorage.getItem('UserId')

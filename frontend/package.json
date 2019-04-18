@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@shoutem/ui": "^0.23.12",
+    "create-react-context": "^0.2.3",
     "expo": "^32.0.0",
     "jest": "^24.1.0",
     "lodash": "^4.17.11",

@@ -8,7 +8,7 @@ import { Ionicons, AntDesign } from '@expo/vector-icons';
 export default class ShoppingPage extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
-    let listObj = navigation.getParam('list', {name: 'Shopping Page', store: ''})
+    let listObj = navigation.getParam('list', {name: 'Shopping Page', store: ''});
     return {
       title: listObj.name + ' | ' + listObj.store
     };
@@ -19,7 +19,6 @@ export default class ShoppingPage extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(props.navigation.getParam('list'));
         this.state = {
             list: props.navigation.getParam('list')
         }
@@ -52,11 +51,11 @@ export default class ShoppingPage extends React.Component {
             }
             newItem[arrayName].push(this.username);
         }
-        let newlist = [...state.list.items]
-        newlist[i] = newItem
-        let newState = {...state}
-        newState.list.items = newlist
-        return newState
+        let newlist = [...state.list.items];
+        newlist[i] = newItem;
+        let newState = {...state};
+        newState.list.items = newlist;
+        return newState;
     }
 
     upvotePrice = async (item, i) => {
@@ -64,7 +63,7 @@ export default class ShoppingPage extends React.Component {
             await votePrice(0, this.username, item.upc, {name: 'Schnucks', lat: 40.11695, long: -88.278297});
             let newState = this.toggleUserInState(this.state, "upvotes", item, i);
             this.setState((state) => {
-                return newState
+                return newState;
             });
         } 
         else {
@@ -83,7 +82,7 @@ export default class ShoppingPage extends React.Component {
             await votePrice(0, this.username, item.upc, {name: 'Schnucks', lat: 40.11695, long: -88.278297});
             let newState = this.toggleUserInState(this.state, "downvotes", item, i);
             this.setState((state) => {
-                return newState
+                return newState;
             });
         } 
         else {
@@ -99,11 +98,45 @@ export default class ShoppingPage extends React.Component {
 
     render() {
         const list = this.state.list
-        console.log(list.name);
         return (
             <View style={styles.container}>
-                {/* <Text style={styles.titleText}>{list.name} at {list.store}</Text> */}
                 {list.items.map((list_item, i) => {
+                        const checkState = "checked" + i;
+                        const upState = "up" + i;
+                        const downState = "down" + i;
+                        return(
+                            <View key={i} style={styles.itemContainer}>
+                                <CheckBox checked={this.state[checkState]} onPress={() => this.setState({[checkState]: !this.state[checkState]})}/>
+                                <TouchableNativeFeedback style={styles.button} onPress={() => this.props.navigation.navigate('Details', {upc: list_item.upc, store:this.state.list.store})}>
+                                    <View style={styles.itemDetailsContainer}>
+                                        <Image style={styles.image} source={{uri: list_item.imageUrl}}/>
+                                        <View style={styles.item}>
+                                            <Text style={styles.itemName} numberOfLines={2}>{list_item.name}</Text>
+                                            <Text>Price: ${Number.parseFloat(list_item.price).toFixed(2)}</Text>
+                                            <Text>Quantity: {list_item.quantity}</Text>
+                                        </View>
+                                    </View>
+                                </TouchableNativeFeedback>
+                                <View style={styles.vote}>
+                                    <View style={styles.voteContainer}>
+                                        <TouchableNativeFeedback onPress={() => {
+                                            this.upvotePrice(list_item, i)
+                                            }}>
+                                            <AntDesign name="caretup" size={24} color={list_item.upvotes && list_item.upvotes.includes(this.username) ? "green" : "black"}/>
+                                        </TouchableNativeFeedback>
+                                        <Text style={styles.voteButton}>{list_item.upvotes ? list_item.upvotes.length : 0}</Text>
+                                    </View>
+                                    <View style={styles.voteContainer}>
+                                        <TouchableNativeFeedback onPress={() => {
+                                            this.downvotePrice(list_item, i)
+                                            }}>
+                                            <AntDesign name="caretdown" size={24} color={list_item.downvotes && list_item.downvotes.includes(this.username) ? "red": "black"}/>
+                                        </TouchableNativeFeedback>
+                                        <Text style={styles.voteButton} >{list_item.downvotes ? list_item.downvotes.length : 0}</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        )
                         return <ShoppingItem 
                             list_item={list_item} 
                             index={i} 

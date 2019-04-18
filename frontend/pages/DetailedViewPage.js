@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
-import {searchByUPC} from "../utils/api";
-import {View, ActivityIndicator, StyleSheet, FlatList} from 'react-native';
+import React, { Component } from 'react';
+import { addPrice, searchByUPC } from "../utils/api";
+import { View, ActivityIndicator, StyleSheet, FlatList } from 'react-native';
 import _ from 'lodash'
+
 import { Image, PricingCard, Overlay, Text, Input, Button } from 'react-native-elements';
 
 export default class DetailedViewPage extends Component {
@@ -40,23 +41,46 @@ export default class DetailedViewPage extends Component {
         this.setState(({priceOverlayVisible}) => ({
             priceOverlayVisible: !priceOverlayVisible
         }));
-    }
+    };
 
-
-    //TODO
-    changePrice = () => {
-
-    }
+    changePrice = async () => {
+        /*
+            Find the first store that matches the store selected by the user to
+            get the location data from it.
+         */
+        let navigation = this.props.navigation;
+        let navProps = navigation.state.params;
+        let storeName = navProps.store;
+        let lat=0, long=0;
+        for (let i in this.state.stores) {
+            let store = this.state.stores[i];
+            if (store.name === storeName) {
+                lat = store.location.lat, long = store.location.long;
+            }
+        }
+        this.setState({...this.state, isLoading:true});
+        await addPrice({
+            "upc": this.state.upc,
+            "price": parseFloat(this.state.newPrice),
+            "user": "user",
+            "store": storeName,
+            "lat": parseFloat(lat),
+            "long": parseFloat(long)
+        });
+        let data = await searchByUPC(this.props.navigation.state.params.upc);
+        this.setState({isLoading: false, ...data[0]});
+        this.toggleChangePriceOverlay();
+    };
 
     render() {
         if (this.state.isLoading) {
             return (
-                <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>
+                <View style={styles.activityMonitor}>
                     <ActivityIndicator/>
                 </View>
             );
         }
-
+      
         return (
           <View style={styles.DetailContainer}>
             <View style={styles.ItemImage}>
@@ -114,7 +138,7 @@ export default class DetailedViewPage extends Component {
                     </View>
                     <View style={styles.buttonGroup}>
                         <Button containerStyle={styles.dialogButton} title="CANCEL" onPress={this.toggleChangePriceOverlay} />
-                        <Button containerStyle={styles.dialogButton} title="SUBMIT" onPress={this.toggleChangePriceOverlay} />
+                        <Button containerStyle={styles.dialogButton} title="SUBMIT" onPress={this.changePrice} />
                     </View>
                 </View>
             </Overlay>
@@ -168,6 +192,10 @@ const styles = StyleSheet.create({
         margin: 5
     },
     buttonGroup: {
-        flexDirection: "row"
+        flexDirection: 'row'
     },
+    activityMonitor: {
+        flex: 1,
+        alignContent: 'center',
+        justifyContent: 'center'}
 });
