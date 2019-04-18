@@ -43,13 +43,13 @@ export default class ShoppingPage extends React.Component {
 
     toggleUserInState = (state, arrayName, item, i) => {
         let newItem = {...item}
-        if (newItem[arrayName] && newItem[arrayName].indexOf(this.username) > -1) {
-            newItem[arrayName].splice(newItem[arrayName].indexOf(this.username), 1);
+        if (newItem[arrayName] && newItem[arrayName].indexOf(this.state.username) > -1) {
+            newItem[arrayName].splice(newItem[arrayName].indexOf(this.state.username), 1);
         } else {
             if (newItem[arrayName] === undefined) {
                 newItem[arrayName] = [];
             }
-            newItem[arrayName].push(this.username);
+            newItem[arrayName].push(this.state.username);
         }
         let newlist = [...state.list.items];
         newlist[i] = newItem;
@@ -59,17 +59,23 @@ export default class ShoppingPage extends React.Component {
     }
 
     upvotePrice = async (item, i) => {
-        if (item.upvotes && item.upvotes.includes(this.username)) { // need to unupvote
-            await votePrice(0, this.username, item.upc, {name: 'Schnucks', lat: 40.11695, long: -88.278297});
+        const {store, lat, long} = this.state.list;
+        const storeInfo = {
+            name: store,
+            lat,
+            long
+        }
+        if (item.upvotes && item.upvotes.includes(this.state.username)) { // need to unupvote
+            await votePrice(0, this.state.username, item.upc, storeInfo);
             let newState = this.toggleUserInState(this.state, "upvotes", item, i);
             this.setState((state) => {
                 return newState;
             });
         } 
         else {
-            await votePrice(1, this.username, item.upc, {name: 'Schnucks', lat: 40.11695, long: -88.278297});
+            await votePrice(1, this.state.username, item.upc, storeInfo);
             let newState = this.state;
-            if(item.downvotes && item.downvotes.includes(this.username)) { // need to get rid of downvote 
+            if(item.downvotes && item.downvotes.includes(this.state.username)) { // need to get rid of downvote 
                 newState = this.toggleUserInState(newState, "downvotes", item, i);
             }
             newState = this.toggleUserInState(newState, "upvotes", item, i);
@@ -78,17 +84,23 @@ export default class ShoppingPage extends React.Component {
     }
 
     downvotePrice = async (item, i) => {
-        if (item.downvotes && item.downvotes.includes(this.username)) { // need to unupvote
-            await votePrice(0, this.username, item.upc, {name: 'Schnucks', lat: 40.11695, long: -88.278297});
+        const {store, lat, long} = this.state.list;
+        const storeInfo = {
+            name: store,
+            lat,
+            long
+        }
+        if (item.downvotes && item.downvotes.includes(this.state.username)) { // need to unupvote
+            await votePrice(0, this.state.username, item.upc, storeInfo);
             let newState = this.toggleUserInState(this.state, "downvotes", item, i);
             this.setState((state) => {
                 return newState;
             });
         } 
         else {
-            await votePrice(-1, this.username, item.upc, {name: 'Schnucks', lat: 40.11695, long: -88.278297});
+            await votePrice(-1, this.state.username, item.upc, storeInfo);
             let newState = this.state;
-            if(item.upvotes && item.upvotes.includes(this.username)) { // need to get rid of upvote
+            if(item.upvotes && item.upvotes.includes(this.state.username)) { // need to get rid of upvote
                 newState = this.toggleUserInState(newState, "upvotes", item, i);
             }
             newState = this.toggleUserInState(newState, "downvotes", item, i);
@@ -127,7 +139,7 @@ export default class ShoppingPage extends React.Component {
                                         <TouchablePlatformSpecific onPress={() => {
                                             this.upvotePrice(list_item, i)
                                             }}>
-                                            <AntDesign name="caretup" size={24} color={list_item.upvotes && list_item.upvotes.includes(this.username) ? "green" : "black"}/>
+                                            <AntDesign name="caretup" size={24} color={list_item.upvotes && list_item.upvotes.includes(this.state.username) ? "green" : "black"}/>
                                         </TouchablePlatformSpecific>
                                         <Text style={styles.voteButton}>{list_item.upvotes ? list_item.upvotes.length : 0}</Text>
                                     </View>
@@ -135,7 +147,7 @@ export default class ShoppingPage extends React.Component {
                                         <TouchablePlatformSpecific onPress={() => {
                                             this.downvotePrice(list_item, i)
                                             }}>
-                                            <AntDesign name="caretdown" size={24} color={list_item.downvotes && list_item.downvotes.includes(this.username) ? "red": "black"}/>
+                                            <AntDesign name="caretdown" size={24} color={list_item.downvotes && list_item.downvotes.includes(this.state.username) ? "red": "black"}/>
                                         </TouchablePlatformSpecific>
                                         <Text style={styles.voteButton} >{list_item.downvotes ? list_item.downvotes.length : 0}</Text>
                                     </View>
