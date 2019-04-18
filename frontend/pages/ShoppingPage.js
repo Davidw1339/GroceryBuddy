@@ -59,6 +59,7 @@ export default class ShoppingPage extends React.Component {
     }
 
     upvotePrice = async (item, i) => {
+
         const {store, lat, long} = this.state.list;
         const storeInfo = {
             name: store,
@@ -99,6 +100,7 @@ export default class ShoppingPage extends React.Component {
         } 
         else {
             await votePrice(-1, this.state.username, item.upc, storeInfo);
+
             let newState = this.state;
             if(item.upvotes && item.upvotes.includes(this.state.username)) { // need to get rid of upvote
                 newState = this.toggleUserInState(newState, "upvotes", item, i);
@@ -119,8 +121,6 @@ export default class ShoppingPage extends React.Component {
             <View style={styles.container}>
                 {list.items.map((list_item, i) => {
                         const checkState = "checked" + i;
-                        const upState = "up" + i;
-                        const downState = "down" + i;
                         return(
                             <View key={i} style={styles.itemContainer}>
                                 <CheckBox checked={this.state[checkState]} onPress={() => this.setState({[checkState]: !this.state[checkState]})}/>

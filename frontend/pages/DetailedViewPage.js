@@ -24,6 +24,10 @@ export default class DetailedViewPage extends Component {
     }
 
     async componentDidMount() {
+        this.refresh()
+    }
+
+    refresh = async () => {
         let data = await searchByUPC(this.props.navigation.state.params.upc);
 
         //we only want the prices for the store we selected
@@ -67,8 +71,7 @@ export default class DetailedViewPage extends Component {
             "lat": parseFloat(lat),
             "long": parseFloat(long)
         });
-        let data = await searchByUPC(this.props.navigation.state.params.upc);
-        this.setState({isLoading: false, ...data[0]});
+        this.refresh()
         this.toggleChangePriceOverlay();
     };
 
@@ -103,7 +106,7 @@ export default class DetailedViewPage extends Component {
                         data={this.state.oldPrices}
                         renderItem={({item}) => 
                             <View style={styles.OldPriceListItem}>
-                                <Text style={{alignSelf: "flex-start"}}>{item.price.toString()}</Text>
+                                <Text style={{alignSelf: "flex-start"}}>${item.price.toFixed(2)}</Text>
                                 <Text style={{ alignSelf: "flex-end", color: 'grey' }}>
                                     {((new Date(Math.floor(item.date) * 1000)).getMonth() + 1) + '/' + 
                                       (new Date(Math.floor(item.date) * 1000)).getDate() + '/' + 
@@ -118,7 +121,7 @@ export default class DetailedViewPage extends Component {
                 <PricingCard
                     color="#4f9deb"
                     title={this.state.name}
-                    price={"$" + this.state.oldPrices[0].price.toString()}
+                    price={"$" + this.state.oldPrices[this.state.oldPrices.length - 1].price.toFixed(2)}
                     button={{ title: 'Add/Change Price', icon: 'add' }}
                     onButtonPress={this.toggleChangePriceOverlay}
                 />

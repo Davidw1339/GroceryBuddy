@@ -50,7 +50,8 @@ export default class SearchPage extends React.Component {
       }
       
       // set store specific parameters
-      currentPrice = item.stores[i].prices[0]
+      let lastIndex = item.stores[i].prices.length - 1
+      currentPrice = item.stores[i].prices[lastIndex]
       strippedItem.price = currentPrice.price
       strippedItem.upvotes = currentPrice.upvotes
       strippedItem.downvotes = currentPrice.downvotes

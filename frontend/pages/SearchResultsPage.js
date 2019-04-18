@@ -27,7 +27,8 @@ class ListItem extends React.PureComponent {
       let minPrice = Number.MAX_VALUE;
       let maxPrice = 0;
       for (let i = 0; i < this.props.item.stores.length; i++) {
-        const price = this.props.item.stores[i].prices[0].price;
+        let lastIndex = this.props.item.stores[i].prices.length - 1;
+        const price = this.props.item.stores[i].prices[lastIndex].price;
         if (price < minPrice) {
           minPrice = price;
         }
