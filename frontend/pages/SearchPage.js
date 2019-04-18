@@ -30,8 +30,11 @@ export default class SearchPage extends React.Component {
     cheapestPrice = Number.MAX_VALUE;
     cheapestItem = null;
 
+    allStoreNames = []
+
     for (let i = 0; i < item.stores.length; i++) {
       storeName = item.stores[i].name
+      allStoreNames.push(storeName)
       if (!(storeName in newStores)) {
         // create new store, save lat and long
         newStores[storeName] = {};
@@ -48,7 +51,7 @@ export default class SearchPage extends React.Component {
         quantity: 1,
         cheapest: false
       }
-      
+
       // set store specific parameters
       let lastIndex = item.stores[i].prices.length - 1
       currentPrice = item.stores[i].prices[lastIndex]
@@ -62,6 +65,30 @@ export default class SearchPage extends React.Component {
       }
       newStores[storeName].items.push(strippedItem)
     }
+
+    console.log("NEW STORES")
+    console.log(newStores)
+
+    console.log(allStoreNames)
+
+    Object.keys(newStores).forEach(function(store) {
+      console.log(store)
+      if (!(allStoreNames.includes(store))) {
+        console.log("ADDING INF ITEM")
+        strippedItem = {
+          name: item.name,
+          imageUrl: item.image_url,
+          upc: item.upc,
+          quantity: 1,
+          cheapest: false,
+          price: Infinity,
+          upvotes: 0,
+          downvotes: 0
+        }
+        newStores[store].items.push(strippedItem)
+      }
+    })
+
 
     cheapestItem.cheapest = true;
 
@@ -209,7 +236,7 @@ export default class SearchPage extends React.Component {
                 onLongPress={() => this.deleteAlert(i)}
                 leftAvatar={{ title: l.name, source: { uri: l.imageUrl } }}
                 title={l.name}
-                rightTitle={'$' + Number(this.state.stores[this.state.selectedStore].items[i].price).toFixed(2)}
+                rightTitle={this.state.stores[this.state.selectedStore].items[i].price != Infinity ? '$' + Number(this.state.stores[this.state.selectedStore].items[i].price).toFixed(2) : 'N/A'}
                 rightTitleStyle={{color: this.state.stores[this.state.selectedStore].items[i].cheapest ? 'green': 'black'}}
                 bottomDivider
               />
@@ -221,7 +248,7 @@ export default class SearchPage extends React.Component {
             <ListItem
               title={'Total (' + this.state.stores[this.state.selectedStore].items.length + ' items)'}
               subtitle={this.state.selectedStore}
-              rightTitle={'$' + Number(this.calculateStoreTotal(this.state.selectedStore)).toFixed(2)}
+              rightTitle={this.calculateStoreTotal(this.state.selectedStore) != Infinity ? '$' + Number(this.calculateStoreTotal(this.state.selectedStore)).toFixed(2) : 'N/A'}
               topDivider
               onPress={this._onOpenCompare}
             />
@@ -246,7 +273,7 @@ export default class SearchPage extends React.Component {
                     />
                   }
                   <Text style={styles.subtitle}>
-                    {'$' + Number(this.calculateStoreTotal(key)).toFixed(2)}
+                    {this.calculateStoreTotal(key) != Infinity ? '$' + Number(this.calculateStoreTotal(key)).toFixed(2) : 'N/A'}
                   </Text>
                 </View>
             ))} 
