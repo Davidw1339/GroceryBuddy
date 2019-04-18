@@ -27,23 +27,34 @@ def search_gps():
     lon = float(request.args.get('long', default=0))
     miles = request.args.get('miles', default=10)
 
-    items = model.Item.objects().only('stores')
+    pipeline = [
+        {"$unwind": "$stores"},
+        {"$group": {
+                "_id": {
+                    "name": "$stores.name",
+                    "lat": "$stores.location.lat",
+                    "long": "$stores.location.long"
+                }
+        }}
+    ]
+
+    stores = list(model.Item.objects.aggregate(*pipeline))
 
     seen = set()
     list_of_stores = []
-    for item in items:
-        for store in item.stores:
-            store_lat = store['location']['lat']
-            store_long = store['location']['long']
-            store_entry = {
-                'name': store['name'],
-                'lat': store_lat,
-                'long': store_long
-            }
-            t = tuple(store_entry.items())
-            if t not in seen:
-                seen.add(t)
-                list_of_stores.append(store_entry)
+    for store in stores:
+        store_name = store['_id']['name']
+        store_lat = store['_id']['lat']
+        store_long = store['_id']['long']
+        store_entry = {
+            'name': store_name,
+            'lat': store_lat,
+            'long': store_long
+        }
+        t = tuple(store_entry.items())
+        if t not in seen:
+            seen.add(t)
+            list_of_stores.append(store_entry)
 
     list_of_stores_gps = []
     for store in list_of_stores:
