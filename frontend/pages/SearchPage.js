@@ -1,15 +1,22 @@
 import React from 'react';
 
-import { View, StyleSheet, Alert, TouchableNativeFeedback, TouchableHighlight, FlatList, Card, Platform } from 'react-native';
+import { ScrollView, View, StyleSheet, Alert, TouchableNativeFeedback, TouchableHighlight, FlatList, Card, Platform } from 'react-native';
 import ItemSearchBar from '../components/ItemSearchBar';
 import { Text, ListItem, Button, Avatar, Icon, Badge } from 'react-native-elements';
 import Collapsible from 'react-native-collapsible';
+import { searchByUPC } from '../utils/api';
 
 export default class SearchPage extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam('name', 'Create Shopping List'),
+      headerRight: (
+        <Button
+          onPress={navigation.getParam('refresh')}
+          title="Refresh"
+        />
+      ),
     };
   };
 
@@ -22,6 +29,34 @@ export default class SearchPage extends React.Component {
     }
   }
 
+  componentDidMount() {
+    try {
+      this.props.navigation.setParams({ refresh: this.refresh });
+    } catch(err) {
+      //navigation is undefined during testing, this is as expected
+    }
+  }
+
+  refresh = async () => {
+    console.log("adding upcs")
+    const upcCodes = []
+    if (Object.keys(this.state.stores).length > 0) {
+      const firstStoreKey = Object.keys(this.state.stores)[0];
+      const items = this.state.stores[firstStoreKey].items;
+      for (let i = 0; i < items.length; i++) {
+        upcCodes.push(items[i].upc)
+        this.deleteItem(i);
+      }
+      console.log("adding upcs")
+      console.log(upcCodes);
+      for(let upc of upcCodes) {
+        let newItem = (await searchByUPC(upc))[0];
+        console.log(newItem);
+        this.addItem(newItem);
+      }      
+    }
+  }
+
   addItem = (item) => {
     console.log("ADDING ITEM")
     console.log(item)
@@ -29,9 +64,8 @@ export default class SearchPage extends React.Component {
 
     cheapestPrice = Number.MAX_VALUE;
     cheapestItem = null;
-
     allStoreNames = []
-
+    
     for (let i = 0; i < item.stores.length; i++) {
       storeName = item.stores[i].name
       allStoreNames.push(storeName)
@@ -228,7 +262,7 @@ export default class SearchPage extends React.Component {
         <View style={styles.container}>
           <ItemSearchBar onSearch={this.submitSearch} />
 
-          <View>
+          <ScrollView>
             {this.state.stores[this.state.selectedStore].items.map((l, i) => (
               <ListItem
                 key={i}
@@ -241,7 +275,7 @@ export default class SearchPage extends React.Component {
                 bottomDivider
               />
             ))}
-          </View>
+          </ScrollView>
 
           <View style={styles.footer}>
             <Icon name={this.state.isCollapsed ? 'expand-less' : 'expand-more'} type='material'/>
