@@ -5,12 +5,14 @@ import {
   Image,
   View,
   TouchableHighlight,
+  TouchableNativeFeedback,
   ActivityIndicator,
   FlatList,
 } from 'react-native';
 import React from 'react';
 import { Text } from 'react-native-elements';
 import { searchForItem, searchByUPC } from '../utils/api';
+import { Platform } from 'react-native'
 
 class ListItem extends React.PureComponent {
     _onPress = () => {
@@ -44,26 +46,31 @@ class ListItem extends React.PureComponent {
       const name = this.props.item.name;
       const image = this.props.item.image_url;
       const priceRange = this.getPriceRange();
-      return (
-        <TouchableHighlight
-          style={this.props.style}
-          onPress={this._onPress}
-          underlayColor='#dddddd'>
-          <View>
-            <View style={styles.rowContainer}>
-              <Image style={styles.thumb} source={{ uri: image }} />
-              <View style={styles.textContainer}>
-                <Text style={styles.title}
-                  numberOfLines={1}>{name}</Text>
-                <Text style={styles.subtitle}
-                  numberOfLines={1}>{priceRange}</Text>
+
+      let TouchablePlatformSpecific = Platform.OS === 'ios' ? 
+        TouchableHighlight : 
+        TouchableNativeFeedback;
+
+        return (
+          <TouchablePlatformSpecific
+            style={this.props.style}
+            onPress={this._onPress}
+            underlayColor='#dddddd'>
+            <View>
+              <View style={styles.rowContainer}>
+                <Image style={styles.thumb} source={{ uri: image }} />
+                <View style={styles.textContainer}>
+                  <Text style={styles.title}
+                    numberOfLines={1}>{name}</Text>
+                  <Text style={styles.subtitle}
+                    numberOfLines={1}>{priceRange}</Text>
+                </View>
               </View>
+              <View style={styles.separator}/>
             </View>
-            <View style={styles.separator}/>
-          </View>
-        </TouchableHighlight>
-      );
-    }
+          </TouchablePlatformSpecific>   
+        )
+     };
 }
 
 export default class SearchResultsPage extends React.Component {

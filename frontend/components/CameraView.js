@@ -22,6 +22,11 @@ export default class CameraView extends React.Component {
     this.props.navigation.getParam('handlePictureTaken', () => {alert("Reached camera from unknown route")})(image);
   }
 
+  /**
+   * renders camera view
+   * 
+   * @return rendered camera view
+   */
   render() {
     const { hasCameraPermission } = this.state;
     // Check that permission was granted
@@ -82,7 +87,6 @@ export default class CameraView extends React.Component {
     }
   }
 }
-
 
 const styles = StyleSheet.create({
   container: {

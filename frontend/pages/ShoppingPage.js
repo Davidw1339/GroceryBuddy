@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, TouchableNativeFeedback, Image } from 'react-native';
+import { View, StyleSheet, TouchableNativeFeedback, TouchableHighlight, Image } from 'react-native';
 import { Text, CheckBox } from 'react-native-elements';
 import { votePrice, getUserId } from '../utils/api';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
-
+import { Platform } from 'react-native'
 
 export default class ShoppingPage extends React.Component {
 
@@ -98,6 +98,11 @@ export default class ShoppingPage extends React.Component {
 
     render() {
         const list = this.state.list
+              
+        let TouchablePlatformSpecific = Platform.OS === 'ios' ? 
+            TouchableHighlight : 
+            TouchableNativeFeedback;
+         
         return (
             <View style={styles.container}>
                 {list.items.map((list_item, i) => {
@@ -107,7 +112,7 @@ export default class ShoppingPage extends React.Component {
                         return(
                             <View key={i} style={styles.itemContainer}>
                                 <CheckBox checked={this.state[checkState]} onPress={() => this.setState({[checkState]: !this.state[checkState]})}/>
-                                <TouchableNativeFeedback style={styles.button} onPress={() => this.props.navigation.navigate('Details', {upc: list_item.upc, store:this.state.list.store})}>
+                                <TouchablePlatformSpecific style={styles.button} onPress={() => this.props.navigation.navigate('Details', {upc: list_item.upc, store:this.state.list.store})}>
                                     <View style={styles.itemDetailsContainer}>
                                         <Image style={styles.image} source={{uri: list_item.imageUrl}}/>
                                         <View style={styles.item}>
@@ -116,22 +121,22 @@ export default class ShoppingPage extends React.Component {
                                             <Text>Quantity: {list_item.quantity}</Text>
                                         </View>
                                     </View>
-                                </TouchableNativeFeedback>
+                                </TouchablePlatformSpecific>
                                 <View style={styles.vote}>
                                     <View style={styles.voteContainer}>
-                                        <TouchableNativeFeedback onPress={() => {
+                                        <TouchablePlatformSpecific onPress={() => {
                                             this.upvotePrice(list_item, i)
                                             }}>
                                             <AntDesign name="caretup" size={24} color={list_item.upvotes && list_item.upvotes.includes(this.username) ? "green" : "black"}/>
-                                        </TouchableNativeFeedback>
+                                        </TouchablePlatformSpecific>
                                         <Text style={styles.voteButton}>{list_item.upvotes ? list_item.upvotes.length : 0}</Text>
                                     </View>
                                     <View style={styles.voteContainer}>
-                                        <TouchableNativeFeedback onPress={() => {
+                                        <TouchablePlatformSpecific onPress={() => {
                                             this.downvotePrice(list_item, i)
                                             }}>
                                             <AntDesign name="caretdown" size={24} color={list_item.downvotes && list_item.downvotes.includes(this.username) ? "red": "black"}/>
-                                        </TouchableNativeFeedback>
+                                        </TouchablePlatformSpecific>
                                         <Text style={styles.voteButton} >{list_item.downvotes ? list_item.downvotes.length : 0}</Text>
                                     </View>
                                 </View>

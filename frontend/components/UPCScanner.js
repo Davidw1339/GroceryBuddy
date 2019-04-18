@@ -22,6 +22,11 @@ export default class ItemAdditionForm extends React.Component {
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
+  /**
+   * renders scanner
+   * 
+   * @return rendered scanner
+   */
   render() {
     const { hasCameraPermission } = this.state;
 

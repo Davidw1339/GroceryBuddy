@@ -11,6 +11,11 @@ export default class ItemSearchBar extends React.Component {
     }
   }
 
+  /**
+   * renders search bar
+   * 
+   * @return rendered search bar
+   */
   render() {
     return (
       <View style={styles.container}>

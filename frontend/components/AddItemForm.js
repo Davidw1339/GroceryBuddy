@@ -47,34 +47,49 @@ export default class AddItemForm extends React.Component {
     this.getLocationAsync();
   }
 
+  /**
+   * resize image and set state so image data can be sent to backend
+   * 
+   * @param image
+   */
   retrievePicture = (image) => {
-    // Manipulate the image by resizing it to a smaller size
     ImageManipulator.manipulateAsync(image.uri, [{resize: {width: 300}}], {base64: true})
     .then((image) => {
       const base64_datauri = 'data:image/jpg;base64,' + image.base64;
-      // set the state correctly so that the data can be sent to the backend
       this.setState({image_uri: base64_datauri, image: image.base64});
     })
   }
 
+  /**
+   * navigates to camera
+   */
   openCamera = () => {
     this.props.navigation.navigate('Camera', {
       handlePictureTaken: this.retrievePicture
     })
   }
 
+  /**
+   * set state so upc data can be sent to backend
+   */
   retrieveUPC = (type, data) => {
     this.setState({
       upc: data
     });
   }
 
+  /**
+   * navigates to scanner
+   */
   openScanner = () => {
     this.props.navigation.navigate('Scanner', {
       handleBarCodeScanned: this.retrieveUPC
     });
   }
 
+  /**
+   * submits form
+   */
   submitItemForm = () => {
     console.log(this.state);
     let response = addGroceryItem(this.state);
@@ -107,6 +122,11 @@ export default class AddItemForm extends React.Component {
     });
   }
 
+  /**
+   * renders add item form with text/photo inputs and upc scanning
+   * 
+   * @return rendered add item form
+   */
   render() {
     return (
       <ScrollView>

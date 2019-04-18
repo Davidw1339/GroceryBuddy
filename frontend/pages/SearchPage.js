@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Alert, TouchableNativeFeedback } from 'react-native';
+import { View, StyleSheet, Alert, TouchableNativeFeedback, TouchableHighlight } from 'react-native';
 import ItemSearchBar from '../components/ItemSearchBar';
 import { Text, ListItem, Button } from 'react-native-elements';
-
+import { Platform } from 'react-native'
 
 export default class SearchPage extends React.Component {
 
@@ -143,76 +143,80 @@ export default class SearchPage extends React.Component {
   }
 
   render() {
+    let TouchablePlatformSpecific = Platform.OS === 'ios' ? 
+      TouchableHighlight : 
+      TouchableNativeFeedback;
+      
     if (this.state.selectedStore === '') {
       return (
         <View style={styles.container}>
-        <ItemSearchBar onSearch={this.submitSearch} onPressCamera={this.scanBarCode}/>
+          <ItemSearchBar onSearch={this.submitSearch} onPressCamera={this.scanBarCode}/>
 
-        <View style={styles.footer}>
-          <ListItem
-            title={'Total (0) items'}
-            rightTitle={'$0.00'}
-            topDivider
-          />
+            <View style={styles.footer}>
+              <ListItem
+                title={'Total (0) items'}
+                rightTitle={'$0.00'}
+                topDivider
+              />
+            </View>
+            <View>
+              <Button
+                icon={{
+                  name: "check",
+                  size: 20,
+                  color: "white"
+                }}
+                title="Finish Shopping List"
+                iconRight
+                onPress={() => {this.props.navigation.navigate("Shopping")}}
+              />
+            </View>
         </View>
-        <View>
-          <Button
-            icon={{
-              name: "check",
-              size: 20,
-              color: "white"
-            }}
-            title="Finish Shopping List"
-            iconRight
-            onPress={() => {this.props.navigation.navigate("Shopping")}}
-          />
-        </View>
-
-      </View>
       );
     }
+
     return (
-      <View style={styles.container}>
-        <ItemSearchBar onSearch={this.submitSearch} />
+        <View style={styles.container}>
+          <ItemSearchBar onSearch={this.submitSearch} />
 
-        <View>
-          {this.state.stores[this.state.selectedStore].items.map((l, i) => (
+          <View>
+            {this.state.stores[this.state.selectedStore].items.map((l, i) => (
+              <ListItem
+                key={i}
+                Component={TouchablePlatformSpecific}
+                onLongPress={() => this.deleteAlert(i)}
+                leftAvatar={{ title: l.name, source: { uri: l.imageUrl } }}
+                title={l.name}
+                rightTitle={'$' + Number(this.state.stores[this.state.selectedStore].items[i].price).toFixed(2)}
+                bottomDivider
+              />
+            ))}
+          </View>
+
+          <View style={styles.footer}>
             <ListItem
-              key={i}
-              Component={TouchableNativeFeedback}
-              onLongPress={() => this.deleteAlert(i)}
-              leftAvatar={{ title: l.name, source: { uri: l.imageUrl } }}
-              title={l.name}
-              rightTitle={'$' + Number(this.state.stores[this.state.selectedStore].items[i].price).toFixed(2)}
-              bottomDivider
+              title={'Total (' + this.state.stores[this.state.selectedStore].items.length + ' items)'}
+              subtitle={this.state.selectedStore}
+              rightTitle={'$' + Number(this.calculateStoreTotal(this.state.selectedStore)).toFixed(2)}
+              topDivider
             />
-          ))}
-        </View>
+          </View>
+          <View>
+            <Button
+              icon={{
+                name: "check",
+                size: 20,
+                color: "white"
+              }}
+              title="Finish Shopping List"
+              iconRight
+              onPress={this.launchShopping}
+            />
+          </View>
 
-        <View style={styles.footer}>
-          <ListItem
-            title={'Total (' + this.state.stores[this.state.selectedStore].items.length + ' items)'}
-            subtitle={this.state.selectedStore}
-            rightTitle={'$' + Number(this.calculateStoreTotal(this.state.selectedStore)).toFixed(2)}
-            topDivider
-          />
-        </View>
-        <View>
-          <Button
-            icon={{
-              name: "check",
-              size: 20,
-              color: "white"
-            }}
-            title="Finish Shopping List"
-            iconRight
-            onPress={this.launchShopping}
-          />
-        </View>
-
-      </View>
-    );
-  }
+        </View> 
+    )
+   };
 }
 
 const styles = StyleSheet.create({

@@ -12,6 +12,11 @@ export default class ItemView extends React.Component {
     title: 'Item Details',
   };
 
+  /**
+   * renders item with price
+   * 
+   * @return rendered item
+   */
   render() {
     const { params } = this.props.navigation.state;
     let item = params.item;

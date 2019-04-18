@@ -1,18 +1,28 @@
 'use strict';
 
 import React, { Component } from 'react'
-import { StyleSheet, View, TouchableOpacity, TouchableNativeFeedback } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, TouchableNativeFeedback, TouchableHighlight } from 'react-native';
 import { Card, Text } from 'react-native-elements';
 import Icons from '@expo/vector-icons/FontAwesome';
+import { Platform } from 'react-native'
 
 /**
  * ListItem describes a clickable list element that is displayed on the homepage
  */
 export default class ListItem extends Component {
 
+    /**
+     * renders item
+     * 
+     * @return rendered item
+     */
     render() {
+        let TouchablePlatformSpecific = Platform.OS === 'ios' ? 
+            TouchableHighlight : 
+            TouchableNativeFeedback;
+
         return (
-            <TouchableNativeFeedback onPress={this.props.handleLaunchList}>
+            <TouchablePlatformSpecific onPress={this.props.handleLaunchList}>
                 <Card containerStyle={styles.card}>
                     <View style={styles.cardContentContainer}>
                         <Text style={styles.cardText}>{this.props.name}</Text>
@@ -26,7 +36,7 @@ export default class ListItem extends Component {
                         </View>
                     </View>
                 </Card>
-            </TouchableNativeFeedback>
+            </TouchablePlatformSpecific>    
         );
     }
 }
