@@ -11,20 +11,20 @@ import ShoppingPage from "../pages/ShoppingPage";
 test('DetailViewPage', () => {
     jest.useFakeTimers();
     const tree = renderer.create(<DetailedViewPage />).toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot('DetailViewPage');
 });
 
 
 test('HomePage', () => {
     jest.useFakeTimers();
     const tree = renderer.create(<HomePage />).toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot('HomePage');
 });
 
 test('SearchPage', () => {
     jest.useFakeTimers();
     const tree = renderer.create(<SearchPage />).toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot('SearchPage');
 });
 
 

@@ -14,25 +14,25 @@ import ItemAdditionForm from "../components/UPCScanner";
 test('AddItemForm', () => {
     jest.useFakeTimers();
     const tree = renderer.create(<AddItemForm />).toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot('AddItemForm');
 });
 
 test('ItemSearchBar', () => {
     jest.useFakeTimers();
     const tree = renderer.create(<ItemSearchBar />).toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot('ItemSearchBar');
 });
 
 test('ListItem', () => {
     jest.useFakeTimers();
     const tree = renderer.create(<ListItem />).toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot('ListItem');
 });
 
 
 test('UPCScanner', () => {
     jest.useFakeTimers();
     const tree = renderer.create(<ItemAdditionForm />).toJSON();
-    expect(tree).toMatchSnapshot();
+    expect(tree).toMatchSnapshot('UPCScanner');
 });
 
