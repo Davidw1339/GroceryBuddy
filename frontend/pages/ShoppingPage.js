@@ -7,12 +7,12 @@ import { Platform } from 'react-native'
 
 export default class ShoppingPage extends React.Component {
 
-  static navigationOptions = ({ navigation }) => {
-    let listObj = navigation.getParam('list', {name: 'Shopping Page', store: ''});
-    return {
-      title: listObj.name + ' | ' + listObj.store
+    static navigationOptions = ({ navigation }) => {
+        let listObj = navigation.getParam('list', { name: 'Shopping Page', store: '' });
+        return {
+            title: listObj.name + ' | ' + listObj.store
+        };
     };
-  };
 
     //Decided not to have users login, still need a unique identifier for downvotes to work
     // username = DeviceInfo.getMACAddress();
@@ -30,7 +30,7 @@ export default class ShoppingPage extends React.Component {
 
     setUserId = async () => {
         const userid = await getUserId();
-        this.setState({username: userid})
+        this.setState({ username: userid })
     }
 
     display = (value, active) => {
@@ -42,9 +42,9 @@ export default class ShoppingPage extends React.Component {
     }
 
     toggleUserInState = (state, arrayName, item, i) => {
-        let newItem = {...item}
-        if (newItem[arrayName] && newItem[arrayName].indexOf(this.state.username) > -1) {
-            newItem[arrayName].splice(newItem[arrayName].indexOf(this.state.username), 1);
+        let newItem = { ...item }
+        if (newItem[arrayName] && newItem[arrayName].indexOf(this.username) > -1) {
+            newItem[arrayName].splice(newItem[arrayName].indexOf(this.username), 1);
         } else {
             if (newItem[arrayName] === undefined) {
                 newItem[arrayName] = [];
@@ -53,13 +53,12 @@ export default class ShoppingPage extends React.Component {
         }
         let newlist = [...state.list.items];
         newlist[i] = newItem;
-        let newState = {...state};
+        let newState = { ...state };
         newState.list.items = newlist;
         return newState;
     }
 
     upvotePrice = async (item, i) => {
-
         const {store, lat, long} = this.state.list;
         const storeInfo = {
             name: store,
@@ -72,7 +71,7 @@ export default class ShoppingPage extends React.Component {
             this.setState((state) => {
                 return newState;
             });
-        } 
+        }
         else {
             await votePrice(1, this.state.username, item.upc, storeInfo);
             let newState = this.state;
@@ -97,7 +96,7 @@ export default class ShoppingPage extends React.Component {
             this.setState((state) => {
                 return newState;
             });
-        } 
+        }
         else {
             await votePrice(-1, this.state.username, item.upc, storeInfo);
 
@@ -112,57 +111,25 @@ export default class ShoppingPage extends React.Component {
 
     render() {
         const list = this.state.list
-              
-        let TouchablePlatformSpecific = Platform.OS === 'ios' ? 
-            TouchableHighlight : 
-            TouchableNativeFeedback;
-         
+
+
+
         return (
             <View style={styles.container}>
                 {list.items.map((list_item, i) => {
-                        const checkState = "checked" + i;
-                        return(
-                            <View key={i} style={styles.itemContainer}>
-                                <CheckBox checked={this.state[checkState]} onPress={() => this.setState({[checkState]: !this.state[checkState]})}/>
-                                <TouchablePlatformSpecific style={styles.button} onPress={() => this.props.navigation.navigate('Details', {upc: list_item.upc, store:this.state.list.store})}>
-                                    <View style={styles.itemDetailsContainer}>
-                                        <Image style={styles.image} source={{uri: list_item.imageUrl}}/>
-                                        <View style={styles.item}>
-                                            <Text style={styles.itemName} numberOfLines={2}>{list_item.name}</Text>
-                                            <Text>Price: ${Number.parseFloat(list_item.price).toFixed(2)}</Text>
-                                            <Text>Quantity: {list_item.quantity}</Text>
-                                        </View>
-                                    </View>
-                                </TouchablePlatformSpecific>
-                                <View style={styles.vote}>
-                                    <View style={styles.voteContainer}>
-                                        <TouchablePlatformSpecific onPress={() => {
-                                            this.upvotePrice(list_item, i)
-                                            }}>
-                                            <AntDesign name="caretup" size={24} color={list_item.upvotes && list_item.upvotes.includes(this.state.username) ? "green" : "black"}/>
-                                        </TouchablePlatformSpecific>
-                                        <Text style={styles.voteButton}>{list_item.upvotes ? list_item.upvotes.length : 0}</Text>
-                                    </View>
-                                    <View style={styles.voteContainer}>
-                                        <TouchablePlatformSpecific onPress={() => {
-                                            this.downvotePrice(list_item, i)
-                                            }}>
-                                            <AntDesign name="caretdown" size={24} color={list_item.downvotes && list_item.downvotes.includes(this.state.username) ? "red": "black"}/>
-                                        </TouchablePlatformSpecific>
-                                        <Text style={styles.voteButton} >{list_item.downvotes ? list_item.downvotes.length : 0}</Text>
-                                    </View>
-                                </View>
-                            </View>
-                        )
-                        return <ShoppingItem 
-                            list_item={list_item} 
-                            index={i} 
-                            isChecked={(key) => this.state[key]}
-                            upvoteFunc={this.upvotePrice}
-                            downvoteFunc={this.downvotePrice}
-                            key={i}
-                            username={this.state.username}
-                            goToDetails={() => this.props.navigation.navigate('Details', { upc: list_item.upc, store: this.state.list.store })}/>
+
+                    const checkState = "checked" + i;
+                    const upState = "up" + i;
+                    const downState = "down" + i;
+                    return <ShoppingItem
+                        list_item={list_item}
+                        index={i}
+                        isChecked={(key) => this.state[key]}
+                        upvoteFunc={this.upvotePrice}
+                        downvoteFunc={this.downvotePrice}
+                        key={i}
+                        username={this.state.username}
+                        goToDetails={() => this.props.navigation.navigate('Details', { upc: list_item.upc, store: this.state.list.store })} />
                 })}
             </View>
         );
@@ -170,44 +137,50 @@ export default class ShoppingPage extends React.Component {
 }
 
 class ShoppingItem extends React.Component {
+
     render() {
         list_item = this.props.list_item
         i = this.props.index
         const checkState = "checked" + i
         isChecked = this.props.isChecked(checkState)
-        upvoteFunc = () => {this.props.upvoteFunc(list_item, i)}
-        downvoteFunc = () => {this.props.downvoteFunc(list_item, i)}
+        upvoteFunc = () => { this.props.upvoteFunc(list_item, i) }
+        downvoteFunc = () => { this.props.downvoteFunc(list_item, i) }
         username = this.props.username
         goToDetails = this.props.goToDetails
+
+        let TouchablePlatformSpecific = Platform.OS === 'ios' ?
+            TouchableHighlight :
+            TouchableNativeFeedback;
+
         console.log(username)
         return (
             <View key={i} style={styles.itemContainer}>
-            <CheckBox checked={isChecked} onPress={() => this.setState({ [checkState]: !this.state[checkState] })} />
-            <TouchableNativeFeedback style={styles.button} onPress={goToDetails}>
-                <View style={styles.itemDetailsContainer}>
-                    <Image style={styles.image} source={{ uri: list_item.imageUrl }} />
-                    <View style={styles.item}>
-                        <Text style={styles.itemName} numberOfLines={2}>{list_item.name}</Text>
-                        <Text>Price: ${Number.parseFloat(list_item.price).toFixed(2)}</Text>
-                        <Text>Quantity: {list_item.quantity}</Text>
+                <CheckBox checked={isChecked} onPress={() => this.setState({ [checkState]: !this.state[checkState] })} />
+                <TouchablePlatformSpecific style={styles.button} onPress={goToDetails}>
+                    <View style={styles.itemDetailsContainer}>
+                        <Image style={styles.image} source={{ uri: list_item.imageUrl }} />
+                        <View style={styles.item}>
+                            <Text style={styles.itemName} numberOfLines={2}>{list_item.name}</Text>
+                            <Text>Price: ${Number.parseFloat(list_item.price).toFixed(2)}</Text>
+                            <Text>Quantity: {list_item.quantity}</Text>
+                        </View>
+                    </View>
+                </TouchablePlatformSpecific>
+                <View style={styles.vote}>
+                    <View style={styles.voteContainer}>
+                        <TouchablePlatformSpecific onPress={upvoteFunc}>
+                            <AntDesign name="caretup" size={24} color={list_item.upvotes && list_item.upvotes.includes(username) ? "green" : "black"} />
+                        </TouchablePlatformSpecific>
+                        <Text style={styles.voteButton}>{list_item.upvotes ? list_item.upvotes.length : 0}</Text>
+                    </View>
+                    <View style={styles.voteContainer}>
+                        <TouchablePlatformSpecific onPress={downvoteFunc}>
+                            <AntDesign name="caretdown" size={24} color={list_item.downvotes && list_item.downvotes.includes(username) ? "red" : "black"} />
+                        </TouchablePlatformSpecific>
+                        <Text style={styles.voteButton} >{list_item.downvotes ? list_item.downvotes.length : 0}</Text>
                     </View>
                 </View>
-            </TouchableNativeFeedback>
-            <View style={styles.vote}>
-                <View style={styles.voteContainer}>
-                    <TouchableNativeFeedback onPress={upvoteFunc}>
-                        <AntDesign name="caretup" size={24} color={list_item.upvotes && list_item.upvotes.includes(username) ? "green" : "black"} />
-                    </TouchableNativeFeedback>
-                    <Text style={styles.voteButton}>{list_item.upvotes ? list_item.upvotes.length : 0}</Text>
-                </View>
-                <View style={styles.voteContainer}>
-                    <TouchableNativeFeedback onPress={downvoteFunc}>
-                        <AntDesign name="caretdown" size={24} color={list_item.downvotes && list_item.downvotes.includes(username) ? "red" : "black"} />
-                    </TouchableNativeFeedback>
-                    <Text style={styles.voteButton} >{list_item.downvotes ? list_item.downvotes.length : 0}</Text>
-                </View>
-            </View>
-        </View>)
+            </View>)
 
     }
 }
@@ -232,12 +205,12 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     item: {
-        textAlign: 'center', 
+        textAlign: 'center',
         flex: 1
     },
     image: {
-        width: 75, 
-        height: 75, 
+        width: 75,
+        height: 75,
         marginRight: 20
     },
     itemDetailsContainer: {
@@ -245,22 +218,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     itemContainer: {
-        flexDirection: 'row', 
-        alignItems: 'center', 
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 20
     },
     voteButton: {
-        marginLeft: 10, 
-        width: 20, 
+        marginLeft: 10,
+        width: 20,
         textAlign: 'center'
     },
     voteContainer: {
-        width: 100, 
-        flexDirection: 'row', 
+        width: 100,
+        flexDirection: 'row',
         justifyContent: 'center'
     },
     vote: {
-        marginLeft: 20, 
+        marginLeft: 20,
         justifyContent: 'center'
     }
 });
