@@ -5,6 +5,7 @@ import ItemSearchBar from '../components/ItemSearchBar';
 import { Text, ListItem, Button, Avatar, Icon, Badge } from 'react-native-elements';
 import Collapsible from 'react-native-collapsible';
 import { searchByUPC } from '../utils/api';
+import { Ionicons } from '@expo/vector-icons';
 
 export default class SearchPage extends React.Component {
 
@@ -12,9 +13,11 @@ export default class SearchPage extends React.Component {
     return {
       title: navigation.getParam('name', 'Create Shopping List'),
       headerRight: (
-        <Button
+        <Ionicons
+          name="md-refresh"
+          size={24}
+          style={{marginRight: 15}}
           onPress={navigation.getParam('refresh')}
-          title="Refresh"
         />
       ),
     };
@@ -38,21 +41,22 @@ export default class SearchPage extends React.Component {
   }
 
   refresh = async () => {
-    console.log("adding upcs")
     const upcCodes = []
     if (Object.keys(this.state.stores).length > 0) {
       const firstStoreKey = Object.keys(this.state.stores)[0];
       const items = this.state.stores[firstStoreKey].items;
+      const newItems = [];
       for (let i = 0; i < items.length; i++) {
-        upcCodes.push(items[i].upc)
-        this.deleteItem(i);
-      }
-      console.log("adding upcs")
-      console.log(upcCodes);
-      for(let upc of upcCodes) {
+        const upc = items[i].upc;
+        upcCodes.push(upc)
         let newItem = (await searchByUPC(upc))[0];
-        console.log(newItem);
-        this.addItem(newItem);
+        newItems.push(newItem);
+      }
+      for(let i = 0; i < upcCodes.length; i++) {
+        await this.deleteItem(0);
+      }
+      for(let i = 0; i < upcCodes.length; i++) {
+        this.addItem(newItems[i]);
       }      
     }
   }
@@ -185,10 +189,15 @@ export default class SearchPage extends React.Component {
     Object.keys(this.state.stores).forEach(function(store) {
       newStores[store].items.splice(i,1)
     })
-    this.setState({
-      stores: newStores
-    })
-    this.recalculateTotals()
+    let promise = new Promise((resolve) => {
+      this.setState({
+        stores: newStores
+      }, () => {
+        this.recalculateTotals();
+        resolve();
+      })
+    });
+    return promise;
   }
 
   submitSearch = async (keyword, upc) => {
