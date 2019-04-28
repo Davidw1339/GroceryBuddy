@@ -1,7 +1,6 @@
 from flask import Blueprint, request, send_file
 import io
 from utils import Error
-import validation
 import json
 import model
 
@@ -11,15 +10,15 @@ get_image_blueprint = Blueprint("get_image", __name__)
 @get_image_blueprint.route('/get_image', methods=['GET'])
 def get_image():
     '''
+    This route serves the JPEG image saved for the item with the given UPC.
+    The HTTP response resembles the response for a direct link to a JPEG file
+    (as if the frontend had made a GET request to example.com/photo.jpg).
+
     Body: {"upc"}
     Response: image/jpeg if successful
     Otherwise,
         {"success": false,
          "error": error description}
-
-    This route serves the JPEG image saved for the item with the given UPC.
-    The HTTP response resembles the response for a direct link to a JPEG file
-    (as if the frontend had made a GET request to example.com/photo.jpg).
     '''
     upc = request.args.get('upc')
     if not upc:

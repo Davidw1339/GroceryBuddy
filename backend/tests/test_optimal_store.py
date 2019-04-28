@@ -1,4 +1,3 @@
-import pytest
 import json
 import model
 from utils import Error
@@ -7,6 +6,9 @@ import copy
 
 
 def test_invalid_upc(db, client):
+    '''
+    Tests searching for the cheapest store with an invalid UPC.
+    '''
     for item in valid_items:
         copy.deepcopy(item).save()
     result = model.Item.objects()
@@ -27,6 +29,9 @@ def test_invalid_upc(db, client):
 
 
 def test_single_store(db, client):
+    '''
+    Tests searching for the cheapest store.
+    '''
     for item in valid_items:
         copy.deepcopy(item).save()
     result = model.Item.objects()
@@ -46,6 +51,10 @@ def test_single_store(db, client):
 
 
 def test_multiple_stores(db, client):
+    '''
+    Tests searching for the lowest price
+    for each item among multiple stores.
+    '''
     for item in valid_items:
         copy.deepcopy(item).save()
     result = model.Item.objects()
@@ -66,6 +75,10 @@ def test_multiple_stores(db, client):
 
 
 def test_no_data(db, client):
+    '''
+    Tests searching for the cheapest store
+    without any request data.
+    '''
     for item in valid_items:
         copy.deepcopy(item).save()
 
@@ -77,6 +90,10 @@ def test_no_data(db, client):
 
 
 def test_no_items(db, client):
+    '''
+    Tests searching for the cheapest store
+    for no items.
+    '''
     for item in valid_items:
         copy.deepcopy(item).save()
 

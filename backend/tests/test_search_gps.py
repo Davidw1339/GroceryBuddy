@@ -1,4 +1,3 @@
-import pytest
 import json
 import search
 import test_data
@@ -8,6 +7,10 @@ from math import sin, cos, sqrt, atan2, radians
 
 
 def test_search_close(client, db):
+    '''
+    Tests searching for the closest stores
+    within 10 miles.
+    '''
     for i in test_data.valid_items:
         copy.deepcopy(i).save()
 
@@ -15,15 +18,21 @@ def test_search_close(client, db):
     long = 0
     miles = 10
 
-    rv = client.get('/search_gps?lat=' + str(lat) + "&long=" + str(long) + "&miles=" + str(miles))
+    rv = client.get('/search_gps?lat=' + str(lat) + "&long=" +
+                    str(long) + "&miles=" + str(miles))
     response = json.loads(rv.data)
 
-    stores_in_range = compute_stores_in_range(test_data.valid_items, lat, long, miles)
+    stores_in_range = compute_stores_in_range(
+        test_data.valid_items, lat, long, miles)
 
     assert len(response) == len(stores_in_range)
 
 
 def test_search_1000(client, db):
+    '''
+    Tests searching for the closest stores
+    within 1000 miles.
+    '''
     for i in test_data.valid_items:
         copy.deepcopy(i).save()
 
@@ -31,15 +40,21 @@ def test_search_1000(client, db):
     long = 0
     miles = 1000
 
-    rv = client.get('/search_gps?lat=' + str(lat) + "&long=" + str(long) + "&miles=" + str(miles))
+    rv = client.get('/search_gps?lat=' + str(lat) + "&long=" +
+                    str(long) + "&miles=" + str(miles))
     response = json.loads(rv.data)
 
-    stores_in_range = compute_stores_in_range(test_data.valid_items, lat, long, miles)
+    stores_in_range = compute_stores_in_range(
+        test_data.valid_items, lat, long, miles)
 
     assert len(response) == len(stores_in_range)
 
 
 def compute_stores_in_range(items, lat, lon, miles):
+    '''
+    A verifier that independently computes how
+    many stores are in range of a location.
+    '''
     seen = set()
     list_of_stores = []
     for item in items:

@@ -9,14 +9,15 @@ search_blueprint = Blueprint("search", __name__)
 @search_blueprint.route("/search", methods=['GET'])
 def search():
     '''
-        Body: {one of ["keyword", "upc"], ["limit"]}
-        Response:
-            - {"success": true or false},
-            - {"error": error description}
-
     Returns all items containing the given keyword or
-    with the given UPC. If limit is given, returns at most
-    that number of items.
+    with the given UPC.
+    If both UPC and keyword are given, uses the UPC.
+    If limit is given, returns at most that number of items.
+
+    Body: {one of ["keyword", "upc"], ["limit"]}
+    Response:
+        - {"success": true or false},
+        - {"error": error description}
     '''
     upc = request.args.get('upc')
     keyword = request.args.get('keyword')

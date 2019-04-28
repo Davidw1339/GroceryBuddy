@@ -5,7 +5,7 @@ import base64
 
 def users(num, start=0):
     '''
-    Generates a list of usernames for upvote/downvote lists
+    Generates a list of usernames for upvote/downvote lists.
     '''
     return ['user' + str(i) for i in range(start, start+num)]
 
@@ -174,6 +174,7 @@ store10 = model.Store(
     ]
 )
 
+# valid
 store11 = model.Store(
     name='Safeway',
     location={
@@ -328,30 +329,35 @@ invalid_stores = [
     store15
 ]
 
+# valid
 item0 = model.Item(
     name='apple',
     upc='042100005264',
     stores=valid_stores
 )
 
+# valid
 item1 = model.Item(
     name='milk',
     upc='787735087189',
     stores=valid_stores[::-1]
 )
 
+# valid
 item6 = model.Item(
     name='testItem1',
     upc='042100005265',
     stores=valid_stores[0:3]
 )
 
+# valid
 item7 = model.Item(
     name='testItem2',
     upc='042100005266',
     stores=valid_stores[1:3]
 )
 
+# valid
 item8 = model.Item(
     name='Candy',
     upc='770128241494',

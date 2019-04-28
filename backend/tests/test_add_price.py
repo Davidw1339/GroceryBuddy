@@ -1,4 +1,3 @@
-import pytest
 import json
 from utils import Error
 import model
@@ -7,6 +6,10 @@ import validation
 
 
 def test_add_existing_store(client, existing_item):
+    '''
+    Tests updating the price of an item at a store
+    that already has a price for it.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -38,6 +41,9 @@ def test_add_existing_store(client, existing_item):
 
 
 def test_add_new_store(client, existing_item):
+    '''
+    Tests adding a price for an item at a new store.
+    '''
     upc = str(existing_item.upc)
     new_store = test_data.store10
     store_name = str(new_store.name)
@@ -68,6 +74,9 @@ def test_add_new_store(client, existing_item):
 
 
 def test_nonexistent_item(client, nonexistent_item):
+    '''
+    Tests adding a price for a nonexistent item.
+    '''
     upc = str(nonexistent_item.upc)
     store = nonexistent_item.stores[0]
     store_name = str(store.name)
@@ -91,6 +100,9 @@ def test_nonexistent_item(client, nonexistent_item):
 
 
 def test_missing_user(client, existing_item):
+    '''
+    Tests adding a price without a user.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -113,6 +125,9 @@ def test_missing_user(client, existing_item):
 
 
 def test_add_invalid_store(client, existing_item):
+    '''
+    Tests adding a price for an item to a store with invalid location.
+    '''
     upc = str(existing_item.upc)
     new_store = test_data.store5
     store_name = str(new_store.name)

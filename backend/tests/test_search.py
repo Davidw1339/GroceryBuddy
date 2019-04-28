@@ -1,4 +1,3 @@
-import pytest
 import json
 import search
 import test_data
@@ -7,6 +6,9 @@ from utils import Error
 
 
 def test_no_args(client):
+    '''
+    Tests search without arguments.
+    '''
     rv = client.get('/search')
     response = json.loads(rv.data)
     assert response == {'success': False,
@@ -14,6 +16,9 @@ def test_no_args(client):
 
 
 def test_extra_args(client):
+    '''
+    Tests search with wrong argument names.
+    '''
     rv = client.get('/search', data=json.dumps({
         'extra': 'peilun'
     }))
@@ -23,6 +28,9 @@ def test_extra_args(client):
 
 
 def test_search_by_upc(client, existing_item):
+    '''
+    Tests searching items by UPC.
+    '''
     upc = str(existing_item.upc)
 
     rv = client.get('/search?upc=' + upc)
@@ -33,6 +41,9 @@ def test_search_by_upc(client, existing_item):
 
 
 def test_search_by_keyword_lower(client, existing_item):
+    '''
+    Tests searching items with a lowercase keyword.
+    '''
     upc = str(existing_item.upc)
     name = str(existing_item.name).lower()
 
@@ -44,6 +55,9 @@ def test_search_by_keyword_lower(client, existing_item):
 
 
 def test_search_by_keyword_upper(client, existing_item):
+    '''
+    Tests searching items with an uppercase keyword.
+    '''
     upc = str(existing_item.upc)
     name = str(existing_item.name).upper()
 
@@ -55,6 +69,9 @@ def test_search_by_keyword_upper(client, existing_item):
 
 
 def test_search_by_keyword_mixed(client, existing_item):
+    '''
+    Tests searching items with a mixed case keyword.
+    '''
     upc = str(existing_item.upc)
     name = str(existing_item.name).lower()
 
@@ -70,6 +87,9 @@ def test_search_by_keyword_mixed(client, existing_item):
 
 
 def test_search_by_keyword_partial(client, existing_item):
+    '''
+    Tests searching items with a keyword partially matches.
+    '''
     upc = str(existing_item.upc)
     name = str(existing_item.name).lower()
 
@@ -83,6 +103,10 @@ def test_search_by_keyword_partial(client, existing_item):
 
 
 def test_search_upc_over_keyword(client):
+    '''
+    Tests that UPC is prioritized over keyword
+    if both are given.
+    '''
     first_item = copy.deepcopy(test_data.valid_items[0])
     first_item.save()
     first_upc = first_item.upc
@@ -105,6 +129,9 @@ def test_search_upc_over_keyword(client):
 
 
 def test_invalid_limit(client, existing_item):
+    '''
+    Tests searching items with a max limit of 0 results.
+    '''
     name = str(existing_item.name).lower()
 
     rv = client.get('/search?keyword=' + name + '&limit=0')
@@ -114,6 +141,9 @@ def test_invalid_limit(client, existing_item):
 
 
 def test_limit(client, db):
+    '''
+    Tests searching items with a max limit of results.
+    '''
     keyword = 'test'
     limit = 1
 

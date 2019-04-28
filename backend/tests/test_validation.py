@@ -1,8 +1,10 @@
 from validation import *
-import pytest
 
 
 def test_valid_location():
+    '''
+    Tests validation of a valid location.
+    '''
     loc = {
         'lat': 0,
         'long': 0
@@ -11,6 +13,9 @@ def test_valid_location():
 
 
 def test_valid_location_edge_lat():
+    '''
+    Tests validation of a valid location.
+    '''
     loc = {
         'lat': 90,
         'long': 0
@@ -19,6 +24,9 @@ def test_valid_location_edge_lat():
 
 
 def test_valid_location_edge_long():
+    '''
+    Tests validation of a valid location.
+    '''
     loc = {
         'lat': 0,
         'long': 180
@@ -27,6 +35,9 @@ def test_valid_location_edge_long():
 
 
 def test_invalid_location_too_many_fields():
+    '''
+    Tests validation of a location with too many fields.
+    '''
     loc = {
         'lat': 0,
         'long': 0,
@@ -41,6 +52,9 @@ def test_invalid_location_too_many_fields():
 
 
 def test_invalid_location_not_enough_fields():
+    '''
+    Tests validation of a location with missing fields.
+    '''
     loc = {}
     err_msg = None
     try:
@@ -51,6 +65,9 @@ def test_invalid_location_not_enough_fields():
 
 
 def test_invalid_location_lat():
+    '''
+    Tests validation of an invalid latitude.
+    '''
     loc = {
         'lat': 1000,
         'long': 0
@@ -64,6 +81,9 @@ def test_invalid_location_lat():
 
 
 def test_invalid_location_long():
+    '''
+    Tests validation of an invalid longitude.
+    '''
     loc = {
         'lat': 0,
         'long': 1000
@@ -77,6 +97,9 @@ def test_invalid_location_long():
 
 
 def test_missing_lat():
+    '''
+    Tests validation of a missing latitude.
+    '''
     loc = {
         'latt': 0,
         'long': 90
@@ -90,6 +113,9 @@ def test_missing_lat():
 
 
 def test_missing_long():
+    '''
+    Tests validation of a missing longitude.
+    '''
     loc = {
         'lat': 0,
         'lon': 90
@@ -104,11 +130,17 @@ def test_missing_long():
 
 # UPC test
 def test_valid_upc():
+    '''
+    Tests validation of a valid UPC.
+    '''
     upc = '000000000000'
     validate_upc(upc)
 
 
 def test_invalid_upc_too_long():
+    '''
+    Tests validation of a UPC that is too long.
+    '''
     upc = '1234567890123'
     err_msg = None
     try:
@@ -119,6 +151,9 @@ def test_invalid_upc_too_long():
 
 
 def test_invalid_upc_too_short():
+    '''
+    Tests validation of a UPC that is too short.
+    '''
     upc = '123'
     err_msg = None
     try:
@@ -129,6 +164,9 @@ def test_invalid_upc_too_short():
 
 
 def test_invalid_upc_lowercase():
+    '''
+    Tests validation of a UPC with letters.
+    '''
     upc = '00000000000a'
     err_msg = None
     try:
@@ -139,6 +177,9 @@ def test_invalid_upc_lowercase():
 
 
 def test_invalid_upc_uppercase():
+    '''
+    Tests validation of a UPC with letters.
+    '''
     upc = '00000000000A'
     err_msg = None
     try:
@@ -149,6 +190,9 @@ def test_invalid_upc_uppercase():
 
 
 def test_invalid_upc_special():
+    '''
+    Tests validation of a UPC with special characters.
+    '''
     upc = '!@#$%^&*()_+'
     err_msg = None
     try:
@@ -159,11 +203,17 @@ def test_invalid_upc_special():
 
 
 def test_upc_exists(existing_item):
+    '''
+    Tests validation of UPC uniqueness for a duplicate UPC.
+    '''
     upc = str(existing_item.upc)
     assert validate_unique_upc(upc) is False
 
 
 def test_upc_does_not_exist(nonexistent_item):
+    '''
+    Tests validation of UPC uniqueness for a new UPC.
+    '''
     upc = str(nonexistent_item.upc)
     assert validate_unique_upc(upc) is True
 
@@ -172,6 +222,9 @@ required_fields = ['name', 'upc', 'price', 'user', 'store', 'lat', 'long']
 
 
 def test_valid_has_required():
+    '''
+    Tests validation of fields for valid fields.
+    '''
     data = {
         'name': None,
         'upc': None,
@@ -185,6 +238,9 @@ def test_valid_has_required():
 
 
 def test_valid_has_required_extra():
+    '''
+    Tests validation of fields for valid fields and extra fields.
+    '''
     data = {
         'name': None,
         'upc': None,
@@ -199,5 +255,8 @@ def test_valid_has_required_extra():
 
 
 def test_invalid_has_required():
+    '''
+    Tests validation of fields for missing fields.
+    '''
     data = {}
     assert not has_required(data, required_fields)

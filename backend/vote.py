@@ -10,12 +10,19 @@ vote_blueprint = Blueprint("vote", __name__)
 
 
 class Vote(Enum):
+    '''
+    An enum of the 3 possible votes:
+    upvote, downvote, and unvote.
+    '''
     UP = 1
     NEUTRAL = 0
     DOWN = -1
 
     @classmethod
     def from_int(cls, i):
+        '''
+        Returns the corresponding enum for the integers -1, 0, 1.
+        '''
         mapping = {1: cls.UP, 0: cls.NEUTRAL, -1: cls.DOWN}
         return mapping[i]
 
@@ -23,10 +30,17 @@ class Vote(Enum):
 @vote_blueprint.route('/vote', methods=['POST'])
 def vote():
     '''
-        Body: {"upc", "user", "store", "lat", "long", "dir"}
-        Response:
-            - {"success": true or false},
-            - {"error": error description}
+    Saves the vote of a user for a price, or undos
+    the user's vote if dir = 0.
+    Users cannot upvote twice, downvote twice, or
+    undo their vote if they have not voted.
+    However, they can change their upvote to a downvote
+    or vice versa.
+
+    Body: {"upc", "user", "store", "lat", "long", "dir"}
+    Response:
+        - {"success": true or false},
+        - {"error": error description}
     '''
     data = request.get_json(force=True)
 

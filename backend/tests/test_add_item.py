@@ -1,6 +1,4 @@
-import pytest
 import json
-import add_item
 import model
 import test_data
 from utils import Error
@@ -8,6 +6,9 @@ import base64
 
 
 def test_add_new_item(client, nonexistent_item, db):
+    '''
+    Tests adding a new item.
+    '''
     new_item = nonexistent_item
     name = str(new_item.name)
     upc = str(new_item.upc)
@@ -47,6 +48,9 @@ def test_add_new_item(client, nonexistent_item, db):
 
 
 def test_add_new_item_with_image_url(client, db):
+    '''
+    Tests adding a new item with an image link.
+    '''
     new_item = test_data.item8
 
     name = str(new_item.name)
@@ -90,6 +94,9 @@ def test_add_new_item_with_image_url(client, db):
 
 
 def test_add_new_item_with_image(client, db):
+    '''
+    Tests adding a new item with an image file.
+    '''
     new_item = test_data.item13
 
     name = str(new_item.name)
@@ -186,6 +193,9 @@ def test_add_new_item_image_over_url(client, db):
 
 
 def test_existing_item(client, existing_item):
+    '''
+    Tests adding a duplicate item.
+    '''
     name = str(existing_item.name)
     upc = str(existing_item.upc)
 
@@ -213,6 +223,9 @@ def test_existing_item(client, existing_item):
 
 
 def test_partial_item(client, nonexistent_item):
+    '''
+    Tests adding an item with missing fields.
+    '''
     new_item = nonexistent_item
     name = str(new_item.name)
     upc = str(new_item.upc)
@@ -239,6 +252,9 @@ def test_partial_item(client, nonexistent_item):
 
 
 def test_invalid_price(client, nonexistent_item, db):
+    '''
+    Tests adding a new item with a negative price.
+    '''
     new_item = nonexistent_item
     name = str(new_item.name)
     upc = str(new_item.upc)

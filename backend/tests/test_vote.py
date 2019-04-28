@@ -1,4 +1,3 @@
-import pytest
 import json
 import model
 from utils import Error
@@ -7,6 +6,9 @@ import validation
 
 
 def test_upvote(client, existing_item):
+    '''
+    Tests upvoting.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -32,6 +34,9 @@ def test_upvote(client, existing_item):
 
 
 def test_downvote(client, existing_item):
+    '''
+    Tests downvoting.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -57,6 +62,9 @@ def test_downvote(client, existing_item):
 
 
 def test_undo_upvote(client, existing_item):
+    '''
+    Tests undoing an upvote.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -99,6 +107,9 @@ def test_undo_upvote(client, existing_item):
 
 
 def test_undo_downvote(client, existing_item):
+    '''
+    Tests undoing an downvote.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -141,6 +152,9 @@ def test_undo_downvote(client, existing_item):
 
 
 def test_upvote_then_downvote(client, existing_item):
+    '''
+    Tests upvoting then changing it to a downvote.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -183,6 +197,9 @@ def test_upvote_then_downvote(client, existing_item):
 
 
 def test_downvote_then_upvote(client, existing_item):
+    '''
+    Tests downvoting then changing it to an upvote.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -225,6 +242,9 @@ def test_downvote_then_upvote(client, existing_item):
 
 
 def test_invalid_unvote(client, existing_item):
+    '''
+    Tests undoing a vote without ever voting.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -247,6 +267,9 @@ def test_invalid_unvote(client, existing_item):
 
 
 def test_double_upvote(client, existing_item):
+    '''
+    Tests upvoting twice in a row.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -284,6 +307,9 @@ def test_double_upvote(client, existing_item):
 
 
 def test_double_downvote(client, existing_item):
+    '''
+    Tests downvoting twice in a row.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -321,6 +347,9 @@ def test_double_downvote(client, existing_item):
 
 
 def test_nonexistent_item(client, nonexistent_item):
+    '''
+    Tests upvoting the price of a nonexistent item.
+    '''
     upc = str(nonexistent_item.upc)
     store = nonexistent_item.stores[0]
     store_name = str(store.name)
@@ -343,6 +372,9 @@ def test_nonexistent_item(client, nonexistent_item):
 
 
 def test_nonexistent_store(client, existing_item):
+    '''
+    Tests upvoting the price for a nonexistent store.
+    '''
     upc = str(existing_item.upc)
     store = test_data.store10
     store_name = str(store.name)
@@ -365,6 +397,9 @@ def test_nonexistent_store(client, existing_item):
 
 
 def test_missing_direction(client, existing_item):
+    '''
+    Tests voting without specifying the vote.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -386,6 +421,9 @@ def test_missing_direction(client, existing_item):
 
 
 def test_invalid_dir(client, existing_item):
+    '''
+    Tests voting with an invalid vote direction indicator.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)
@@ -408,6 +446,9 @@ def test_invalid_dir(client, existing_item):
 
 
 def test_invalid_user(client, existing_item):
+    '''
+    Tests upvoting with an invalid user.
+    '''
     upc = str(existing_item.upc)
     store = existing_item.stores[0]
     store_name = str(store.name)

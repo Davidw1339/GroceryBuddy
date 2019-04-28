@@ -2,6 +2,10 @@ from enum import Enum
 
 
 class Error(Enum):
+    '''
+    An enum class that holds all custom errors and messages
+    returned by this app.
+    '''
     MISSING_FIELDS = 'Must fill all required fields'
     MISSING_KEYWORD_UPC = 'Request does not contain keyword or upc code'
     ITEM_EXISTS = 'Item already exists in database'

@@ -31,10 +31,12 @@ def add_image(image_b64, item):
 @add_item_blueprint.route('/item', methods=['POST'])
 def add_item():
     '''
-        Body: {"name", "upc", "price", "user", "store", "lat", "long"[, "image", "image_url"]}
-        Response:
-            - {"success": true or false},
-            - {"error": error description}
+    Adds a new item to the database.
+
+    Body: {"name", "upc", "price", "user", "store", "lat", "long"[, "image", "image_url"]}
+    Response:
+        - {"success": true or false},
+        - {"error": error description}
     '''
     data = request.get_json(force=True)
 
@@ -42,8 +44,7 @@ def add_item():
     if not validation.has_required(data, required_fields):
         return json.dumps({'success': False, 'error': Error.MISSING_FIELDS.value})
 
-    lookup = model.Item.objects(upc=data['upc']).first()
-    if lookup is not None:
+    if not validation.validate_unique_upc(data['upc']):
         return json.dumps({'success': False, 'error': Error.ITEM_EXISTS.value})
 
     new_price = model.Price(

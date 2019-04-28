@@ -12,10 +12,12 @@ add_price_blueprint = Blueprint("add_price", __name__)
 @add_price_blueprint.route('/price', methods=['POST'])
 def add_price():
     '''
-        Body: {"upc", "price", "user", "store", "lat", "long"}
-        Response:
-            - {"success": true or false},
-            - {"error": error description}
+    Adds a new price to an existing item.
+
+    Body: {"upc", "price", "user", "store", "lat", "long"}
+    Response:
+        - {"success": true or false},
+        - {"error": error description}
     '''
     data = request.get_json(force=True)
 

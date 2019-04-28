@@ -1,7 +1,6 @@
 from flask import Blueprint, request
 import model
 import json
-from utils import Error
 from math import sin, cos, sqrt, atan2, radians
 
 
@@ -11,16 +10,16 @@ search_gps_blueprint = Blueprint("search_gps", __name__)
 @search_gps_blueprint.route("/search_gps", methods=['GET'])
 def search_gps():
     '''
-        Query Params: lat-latitude, long-longitude, miles-radius in miles
-        Response:
-            [{
-                "name": name of store,
-                "lat": latitude of store,
-                "long": longitude of store
-                "distance": distance of store from given point
-            }]
+    Returns all stores within given radius of given lat,long sorted by distance.
 
-    Returns all stores within given radius of given lat,long sorted by distance
+    Query Params: lat-latitude, long-longitude, miles-radius in miles
+    Response:
+    [{
+        "name": name of store,
+        "lat": latitude of store,
+        "long": longitude of store
+        "distance": distance of store from given point
+    }]
     '''
 
     lat = float(request.args.get('lat', default=0))
@@ -30,11 +29,11 @@ def search_gps():
     pipeline = [
         {"$unwind": "$stores"},
         {"$group": {
-                "_id": {
-                    "name": "$stores.name",
-                    "lat": "$stores.location.lat",
-                    "long": "$stores.location.long"
-                }
+            "_id": {
+                "name": "$stores.name",
+                "lat": "$stores.location.lat",
+                "long": "$stores.location.long"
+            }
         }}
     ]
 
@@ -75,6 +74,7 @@ def search_gps():
         if distance <= float(miles):
             store["distance"] = distance
             list_of_stores_gps.append(store)
-    list_of_stores_gps = sorted(list_of_stores_gps, key=lambda i: i['distance'])
+    list_of_stores_gps = sorted(
+        list_of_stores_gps, key=lambda i: i['distance'])
 
     return json.dumps(list_of_stores_gps)

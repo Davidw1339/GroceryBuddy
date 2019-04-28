@@ -1,8 +1,6 @@
 from flask import Blueprint, request
 import json
-import validation
 from utils import Error
-import mongoengine.errors
 import model
 
 optimal_store_blueprint = Blueprint("optimal_store", __name__)
@@ -10,16 +8,22 @@ optimal_store_blueprint = Blueprint("optimal_store", __name__)
 
 @optimal_store_blueprint.route('/optimal_store', methods=['POST'])
 def get_optimal_store():
-    """
-        Body: {"single_store": boolean, single or multiple stores, "items": [upc:String]}
-        Response:   {"success": True or False,
-                    "error": error description,
-                    "optimal_prices":
-                            [{"store": store,
-                              "upcs": list of upcs,
-                              "price": total price of items associated with store}]
-                    }
-    """
+    '''
+    Given a list of item UPCs, computes the cheapest store(s) that sell them.
+    If single_store is true, computes the single store that sells all the items
+    for the lowest total cost.
+    If single_store is false, computes the cheapest store for each item individually,
+    and returns this list of stores (one for each item).
+
+    Body: {"single_store": boolean, single or multiple stores, "items": [upc:String]}
+    Response:   {"success": True or False,
+                "error": error description,
+                "optimal_prices":
+                        [{"store": store,
+                            "upcs": list of upcs,
+                            "price": total price of items associated with store}]
+                }
+    '''
     error = Error.NO_ERROR.value
     data = request.get_json(force=True, silent=True)
     if data is None:

@@ -1,9 +1,14 @@
-from mongoengine import (EmbeddedDocument, StringField, IntField, DecimalField,
-                         DateTimeField, BinaryField, DictField, ListField, EmbeddedDocumentListField, Document)
+from mongoengine import (EmbeddedDocument, StringField, DecimalField,
+                         BinaryField, DictField, ListField,
+                         EmbeddedDocumentListField, Document)
 import validation
 
 
 class Price(EmbeddedDocument):
+    '''
+    Holds the data related to a specific price of an item
+    at a specific store.
+    '''
     user = StringField(min_length=1, max_length=64, required=True)
     upvotes = ListField(StringField(min_length=1, max_length=64))
     downvotes = ListField(StringField(min_length=1, max_length=64))
@@ -12,6 +17,9 @@ class Price(EmbeddedDocument):
 
 
 class Store(EmbeddedDocument):
+    '''
+    Holds the data related to a specific store for an item.
+    '''
     name = StringField(min_length=1, max_length=64, required=True)
     location = DictField(required=True)
     location.validate = validation.validate_location
@@ -19,6 +27,9 @@ class Store(EmbeddedDocument):
 
 
 class Item(Document):
+    '''
+    Holds the data related to an item.
+    '''
     meta = {'collection': 'grocery-items'}
     upc = StringField(max_length=12, min_length=12, required=True)
     upc.validate = validation.validate_upc
