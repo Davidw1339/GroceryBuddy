@@ -14,12 +14,22 @@ import { Text } from 'react-native-elements';
 import { searchForItem, searchByUPC } from '../utils/api';
 import { Platform } from 'react-native'
 
+/**
+ * Class representing list item.
+ * @extends React.PureComponent
+ */
 class ListItem extends React.PureComponent {
+    /**
+     * Handles press of item.
+     */
     _onPress = () => {
       this.props.onPressItem(this.props.item);
     }
 
-    // returns string representing price range of item
+    /**
+     * Returns string representing price range of item.
+     * @return {string} The price range of the item.
+     */
     getPriceRange = () => {
       if(this.props.item.stores == null) {
         return '';
@@ -43,6 +53,10 @@ class ListItem extends React.PureComponent {
       }
     }
 
+    /**
+     * Renders list item.
+     * @return {TouchablePlatformSpecific} The list item.
+     */
     render() {
       const name = this.props.item.name;
       const image = this.props.item.image_url;
@@ -74,15 +88,27 @@ class ListItem extends React.PureComponent {
      };
 }
 
+/**
+ * Class representing search results page.
+ * @extends React.Component
+ */
 export default class SearchResultsPage extends React.Component {
+  /**
+  * Create search results page.
+  */
   constructor(props) {
-    super(props);
-    this.state = {
-      searchResults: [],
-      isLoading: true
-    }
+     super(props);
+     this.state = {
+       searchResults: [],
+       isLoading: true
+     }
   }
 
+   /**
+   * Search for results based on keyword/UPC.
+   * @param {string} keyword - The search keyword.
+   * @param {string} upc - The search UPC.
+   */
     searchResults = async (keyword, upc) => {
       let result;
       // if keyword doesn't exist then attempt to search by UPC
@@ -97,6 +123,9 @@ export default class SearchResultsPage extends React.Component {
       })
     }
 
+   /**
+   * Fetch data.
+   */
     componentDidMount(){
       const keyword = this.props.navigation.getParam("keyword", "");
       const upc = this.props.navigation.getParam("upc", "");
@@ -109,6 +138,10 @@ export default class SearchResultsPage extends React.Component {
 
     _keyExtractor = (item, index) => index.toString();
 
+    /**
+    * Renders list item.
+    * @return {ListItem} The list item.
+    */
     _renderItem = ({item}) => {
         return <ListItem
           item={item}
@@ -116,11 +149,18 @@ export default class SearchResultsPage extends React.Component {
         />
     };
 
+    /**
+    * Handles press of item to add to shopping list.
+    */
     _onPressItem = (item) => {
       this.props.navigation.getParam('handleAddItem', () => {console.log('NO ADD FUNCTION PROVIDED')})(item);
       this.props.navigation.goBack();
     };
 
+    /**
+    * Renders search results page.
+    * @return {View} The search results page.
+    */
     render() {
         if (this.state.isLoading) {
           return (
@@ -140,7 +180,7 @@ export default class SearchResultsPage extends React.Component {
                 data={this.state.searchResults}
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderItem}/>
-            {/* Add other item button */}
+
             <TouchableHighlight 
               style = {styles.ghostItemContainer}
               onPress={() => {this.props.navigation.navigate("AddItem")}}
