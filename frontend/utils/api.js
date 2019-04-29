@@ -81,7 +81,8 @@ export const getNearestStores = (latitude, longitude, miles) => {
 }
 
 export const searchForItem = (keyword) => {
-    const ROUTE = '/search?keyword=' + keyword
+    const LIMIT = 20;
+    const ROUTE = '/search?keyword=' + keyword + '&limit=' + LIMIT;
     console.log('we are searching ' + (BACKEND_URL + ROUTE));
     return fetch(BACKEND_URL + ROUTE, {
         method: "GET"
