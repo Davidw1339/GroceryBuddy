@@ -1,30 +1,27 @@
 import React from 'react';
-import renderer from "react-test-renderer";
-import DetailedViewPage from "../pages/DetailedViewPage";
-import HomePage from "../pages/HomePage";
-import SearchPage from "../pages/SearchPage";
-import SearchResultsPage from "../pages/SearchResultsPage";
-import ShoppingPage from "../pages/ShoppingPage";
-
+import renderer from 'react-test-renderer';
+import DetailedViewPage from '../pages/DetailedViewPage';
+import HomePage from '../pages/HomePage';
+import SearchPage from '../pages/SearchPage';
+import SearchResultsPage from '../pages/SearchResultsPage';
+import ShoppingPage from '../pages/ShoppingPage';
 
 
 test('DetailViewPage', () => {
-    jest.useFakeTimers();
-    const tree = renderer.create(<DetailedViewPage />).toJSON();
-    expect(tree).toMatchSnapshot('DetailViewPage');
+  jest.useFakeTimers();
+  const tree = renderer.create(<DetailedViewPage />).toJSON();
+  expect(tree).toMatchSnapshot('DetailViewPage');
 });
 
 
 test('HomePage', () => {
-    jest.useFakeTimers();
-    const tree = renderer.create(<HomePage />).toJSON();
-    expect(tree).toMatchSnapshot('HomePage');
+  jest.useFakeTimers();
+  const tree = renderer.create(<HomePage />).toJSON();
+  expect(tree).toMatchSnapshot('HomePage');
 });
 
 test('SearchPage', () => {
-    jest.useFakeTimers();
-    const tree = renderer.create(<SearchPage />).toJSON();
-    expect(tree).toMatchSnapshot('SearchPage');
+  jest.useFakeTimers();
+  const tree = renderer.create(<SearchPage />).toJSON();
+  expect(tree).toMatchSnapshot('SearchPage');
 });
-
-

@@ -39,9 +39,9 @@ export const shoppingDummyList = [
         quantity: 1,
         upc: '743105000017',
       },
-    ]
-  }
-]
+    ],
+  },
+];
 
 export const createListDummyItems = [
   {
@@ -54,7 +54,7 @@ export const createListDummyItems = [
         name: 'County Market',
         location: {
           lat: 50.25,
-          long: 20.11
+          long: 20.11,
         },
         prices: [
           {
@@ -62,22 +62,22 @@ export const createListDummyItems = [
             upvote: 2,
             downvote: 1,
             price: 1.99,
-            date: 1552004035
+            date: 1552004035,
           },
           {
             user: 'test_user2',
             upvote: 1,
             downvote: 0,
             price: 2.00,
-            date: 1552004024
-          }
-        ]
+            date: 1552004024,
+          },
+        ],
       },
       {
         name: 'Schnucks',
         location: {
           lat: 51.25,
-          long: 25.11
+          long: 25.11,
         },
         prices: [
           {
@@ -85,22 +85,22 @@ export const createListDummyItems = [
             upvote: 2,
             downvote: 1,
             price: 2.99,
-            date: 1552004035
+            date: 1552004035,
           },
           {
             user: 'test_user2',
             upvote: 1,
             downvote: 0,
             price: 3.99,
-            date: 1552004024
-          }
-        ]
+            date: 1552004024,
+          },
+        ],
       },
       {
         name: 'Walgreens',
         location: {
           lat: 61.25,
-          long: 25.11
+          long: 25.11,
         },
         prices: [
           {
@@ -108,18 +108,18 @@ export const createListDummyItems = [
             upvote: 2,
             downvote: 1,
             price: 4.99,
-            date: 1552004035
+            date: 1552004035,
           },
           {
             user: 'test_user2',
             upvote: 1,
             downvote: 0,
             price: 5.99,
-            date: 1552004024
-          }
-        ]
-      }
-    ]
+            date: 1552004024,
+          },
+        ],
+      },
+    ],
   },
   {
     name: 'Bananas',
@@ -131,7 +131,7 @@ export const createListDummyItems = [
         name: 'County Market',
         location: {
           lat: 50.25,
-          long: 20.11
+          long: 20.11,
         },
         prices: [
           {
@@ -139,22 +139,22 @@ export const createListDummyItems = [
             upvote: 2,
             downvote: 1,
             price: 7.99,
-            date: 1552004035
+            date: 1552004035,
           },
           {
             user: 'test_user2',
             upvote: 1,
             downvote: 0,
             price: 3.00,
-            date: 1552004024
-          }
-        ]
+            date: 1552004024,
+          },
+        ],
       },
       {
         name: 'Schnucks',
         location: {
           lat: 51.25,
-          long: 25.11
+          long: 25.11,
         },
         prices: [
           {
@@ -162,22 +162,22 @@ export const createListDummyItems = [
             upvote: 2,
             downvote: 1,
             price: 2.99,
-            date: 1552004035
+            date: 1552004035,
           },
           {
             user: 'test_user2',
             upvote: 1,
             downvote: 0,
             price: 3.99,
-            date: 1552004024
-          }
-        ]
+            date: 1552004024,
+          },
+        ],
       },
       {
         name: 'Walgreens',
         location: {
           lat: 61.25,
-          long: 25.11
+          long: 25.11,
         },
         prices: [
           {
@@ -185,18 +185,18 @@ export const createListDummyItems = [
             upvote: 2,
             downvote: 1,
             price: 4.99,
-            date: 1552004035
+            date: 1552004035,
           },
           {
             user: 'test_user2',
             upvote: 1,
             downvote: 0,
             price: 5.99,
-            date: 1552004024
-          }
-        ]
-      }
-    ]
+            date: 1552004024,
+          },
+        ],
+      },
+    ],
   },
   {
     name: 'Cookies',
@@ -208,7 +208,7 @@ export const createListDummyItems = [
         name: 'County Market',
         location: {
           lat: 50.25,
-          long: 20.11
+          long: 20.11,
         },
         prices: [
           {
@@ -216,22 +216,22 @@ export const createListDummyItems = [
             upvote: 2,
             downvote: 1,
             price: 7.99,
-            date: 1552004035
+            date: 1552004035,
           },
           {
             user: 'test_user2',
             upvote: 1,
             downvote: 0,
             price: 3.00,
-            date: 1552004024
-          }
-        ]
+            date: 1552004024,
+          },
+        ],
       },
       {
         name: 'Schnucks',
         location: {
           lat: 51.25,
-          long: 25.11
+          long: 25.11,
         },
         prices: [
           {
@@ -239,22 +239,22 @@ export const createListDummyItems = [
             upvote: 2,
             downvote: 1,
             price: 2.99,
-            date: 1552004035
+            date: 1552004035,
           },
           {
             user: 'test_user2',
             upvote: 1,
             downvote: 0,
             price: 3.99,
-            date: 1552004024
-          }
-        ]
+            date: 1552004024,
+          },
+        ],
       },
       {
         name: 'Walgreens',
         location: {
           lat: 61.25,
-          long: 25.11
+          long: 25.11,
         },
         prices: [
           {
@@ -262,17 +262,17 @@ export const createListDummyItems = [
             upvote: 2,
             downvote: 1,
             price: 4.99,
-            date: 1552004035
+            date: 1552004035,
           },
           {
             user: 'test_user2',
             upvote: 1,
             downvote: 0,
             price: 5.99,
-            date: 1552004024
-          }
-        ]
-      }
-    ]
+            date: 1552004024,
+          },
+        ],
+      },
+    ],
   },
 ];

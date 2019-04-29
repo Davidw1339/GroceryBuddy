@@ -3,11 +3,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo';
 
 export default class ItemAdditionForm extends React.Component {
-  static navigationOptions = () => {
-    return {
-      title: "Scan Bar Code",
-    };
-  };
+  static navigationOptions = () => ({
+    title: 'Scan Bar Code',
+  })
 
   constructor(props) {
     super(props);
@@ -22,9 +20,14 @@ export default class ItemAdditionForm extends React.Component {
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
+  handleBarCodeScanned = ({ type, data }) => {
+    this.props.navigation.goBack();
+    this.props.navigation.getParam('handleBarCodeScanned')(type, data);
+  }
+
   /**
    * renders scanner
-   * 
+   *
    * @return rendered scanner
    */
   render() {
@@ -44,10 +47,5 @@ export default class ItemAdditionForm extends React.Component {
         />
       </View>
     );
-  }
-
-  handleBarCodeScanned = ({ type, data }) => {
-    this.props.navigation.goBack();
-    this.props.navigation.getParam('handleBarCodeScanned', () => {alert("Reached scanner from unknown route")})(type, data);
   }
 }

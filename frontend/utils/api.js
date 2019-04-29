@@ -1,188 +1,177 @@
 import fetch from 'node-fetch';
 import { AsyncStorage } from 'react-native';
 
-const BACKEND_URL = 'https://grocerybuddybackend.azurewebsites.net'
+const BACKEND_URL = 'https://grocerybuddybackend.azurewebsites.net';
 
-/*
-Takes in form data from component and casts values to match intended request
-*/
-const formatGroceryItemAdd = (formData) => {
-    return {
-        "name": formData.name,
-        "upc": formData.upc,
-        "price": parseFloat(formData.price),
-        "user": formData.user,
-        "store": formData.store,
-        "lat": parseFloat(formData.lat),
-        "long": parseFloat(formData.long),
-        "image": formData.image
-    }
-};
-
-
-/*
-Takes in form data from component and adds price to db
-*/
-export const addPrice = (formData) => {
-    const ROUTE = '/price';
-    console.log(formData);
-    postToAPI(JSON.stringify(formData), ROUTE);
-};
-
-
-
-/*
-Body: {"name", "upc", "price", "user", "store", "lat", "long"}
-Response:
-    - {"success": true or false},
-    - {"error": error description}
-*/
-export const addGroceryItem = (formData) => {
-    const ROUTE = '/item';
-    console.log("we are submitting");
-    return postToAPI(JSON.stringify(formatGroceryItemAdd(formData)), ROUTE);
-};
-
-
-
-/*
-    Method that posts data to the backend
-    params:
-    @body: string body of request
-    @route: RESTFul route appended to base url
+/**
+ * Takes in form data from component and casts values to match intended request
+ * @param formData
+ * @returns {{image: *,
+ * price: number,
+ * name: *,
+ * upc: (*|string),
+ * store: (*|string|((typedArray: int,
+ * index: number, value: number) => number)|boolean|null),
+ * user: *,
+ * lat: number,
+ * long: number}}
  */
-const postToAPI = (body, route) => {
-    return fetch(BACKEND_URL + route, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: body
-    })
-        .then(response => {
-            let jsonResp = response.json();
-            console.log(jsonResp);
-            return jsonResp;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+const formatGroceryItemAdd = formData => ({
+  name: formData.name,
+  upc: formData.upc,
+  price: parseFloat(formData.price),
+  user: formData.user,
+  store: formData.store,
+  lat: parseFloat(formData.lat),
+  long: parseFloat(formData.long),
+  image: formData.image,
+});
+
+/**
+ * Method that posts data to the backend
+ * @param body string body of request
+ * @param route RESTFul route appended to base url
+ * @returns {Promise<any | never>}
+ */
+const postToAPI = (body, route) => fetch(BACKEND_URL + route, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body,
+}).then(resp => resp.json()).catch(error => error);
+
+/**
+ * Takes in form data from component and adds price to db
+ * @param formData
+ */
+export const addPrice = (formData) => {
+  const ROUTE = '/price';
+  postToAPI(JSON.stringify(formData), ROUTE);
+};
+
+
+/**
+ * Body: {"name", "upc", "price", "user", "store", "lat", "long"}
+ Response:
+ - {"success": true or false},
+ - {"error": error description}
+ * @param formData
+ */
+export const addGroceryItem = (formData) => {
+  const ROUTE = '/item';
+  return postToAPI(JSON.stringify(formatGroceryItemAdd(formData)), ROUTE);
 };
 
 
 export const getNearestStores = (latitude, longitude, miles) => {
-    const ROUTE = '/search_gps?lat=' + latitude.toString() + '&long=' + longitude.toString() + '&miles=' + miles.toString();
-    console.log(BACKEND_URL + ROUTE);
-    return fetch(BACKEND_URL + ROUTE, {
-        method: "GET"
-    })
+  const ROUTE = `/search_gps?lat=${latitude.toString()}&long=${longitude.toString()}&miles=${miles.toString()}`;
+  return fetch(BACKEND_URL + ROUTE, {
+    method: 'GET',
+  })
     .then(res => res.json())
-    .catch(error => console.error(error));
-}
+    .catch(error => error);
+};
 
 export const searchForItem = (keyword) => {
-    const LIMIT = 20;
-    const ROUTE = '/search?keyword=' + keyword + '&limit=' + LIMIT;
-    console.log('we are searching ' + (BACKEND_URL + ROUTE));
-    return fetch(BACKEND_URL + ROUTE, {
-        method: "GET"
-    })
+  const LIMIT = 20;
+  const ROUTE = `/search?keyword=${keyword}&limit=${LIMIT}`;
+  return fetch(BACKEND_URL + ROUTE, {
+    method: 'GET',
+  })
     .then(res => res.json())
-    .catch(error => console.error(error));
+    .catch(error => error);
 };
 
 export const searchByUPC = (upc) => {
-    const ROUTE = `${BACKEND_URL}/search?upc=${upc}`;
-    return fetch(ROUTE, {method:"GET"}).then(res=>res.json());
+  const ROUTE = `${BACKEND_URL}/search?upc=${upc}`;
+  return fetch(ROUTE, { method: 'GET' }).then(res => res.json());
 };
 
 
-/*
+/**
  * Returns all grocery lists associated with current user
+ * @returns {Promise<T | Array> | *}
  */
-export const getLists = () => {
-    return AsyncStorage.getItem('Lists')
-    .then((result) => {
-        if (result === null) {
-            return [{name: "BBQ"}];
-        }
-        return JSON.parse(result);
-    })
-    .catch((error) => {
-        console.log("ERROR RETRIEVING LISTS: " + error);
-        return [];
-    })
-};
+export const getLists = () => AsyncStorage.getItem('Lists')
+  .then((result) => {
+    if (result === null) {
+      return [{ name: 'BBQ' }];
+    }
+    return JSON.parse(result);
+  })
+  .catch(() => []);
 
+/**
+ * Adds list to local storage
+ * @param currentLists
+ * @param listName
+ * @returns {Promise<T | never> | *}
+ */
 export const addList = (currentLists, listName) => {
-    const newList = [
-        ...currentLists,
-        {
-            name: listName,
-            items: []
-        }
-    ]
-    return AsyncStorage.setItem('Lists', JSON.stringify(newList))
-    .catch((error) => {
-        console.log("ERROR ADDING NEW LIST: " + error);
-    })
+  const newList = [
+    ...currentLists,
+    {
+      name: listName,
+      items: [],
+    },
+  ];
+  return AsyncStorage.setItem('Lists', JSON.stringify(newList))
+    .catch(error => error);
 };
 
 export const deleteList = (currentLists, listId) => {
-    currentLists.splice(listId, 1);
-    return AsyncStorage.setItem('Lists', JSON.stringify(currentLists))
-    .catch((error) => {
-        console.log("ERROR DELETING LIST: " + error);
-    })
+  currentLists.splice(listId, 1);
+  return AsyncStorage.setItem('Lists', JSON.stringify(currentLists))
+    .catch(error => error);
 };
 
+/**
+ *  sends POST request to vote for an item
+ * @param voteDirection whether upvoting or downvoting
+ * @param user  User initiating action
+ * @param upc   UPC code of item being changed
+ * @param storeObj  Store
+ * @returns {Promise<any | never>}
+ */
 export const votePrice = (voteDirection, user, upc, storeObj) => {
-    const ROUTE = '/vote';
-    return fetch(BACKEND_URL + ROUTE, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-          upc,
-          store: storeObj.name,
-          lat: storeObj.lat,
-          long: storeObj.long,
-          user: user,
-          dir: voteDirection
-      })
-    })
+  const ROUTE = '/vote';
+  return fetch(BACKEND_URL + ROUTE, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      upc,
+      store: storeObj.name,
+      lat: storeObj.lat,
+      long: storeObj.long,
+      user,
+      dir: voteDirection,
+    }),
+  })
     .then(response => response.json())
-    .then(json => {
-        console.log(json);
-    })
-    .catch((error) => {
-        console.log(error);
-    })
+    .catch(error => error);
 };
 
+/**
+ * Fetches userId from local storage
+ * @returns {Promise<T | string> | *}
+ */
+export const getUserId = () => AsyncStorage.getItem('UserId')
+  .then((result) => {
+    if (result === null) {
+      let userid = '';
+      const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-export const getUserId = () => {
-    return AsyncStorage.getItem('UserId')
-        .then((result) => {
-            if (result === null) {
-                var userid = "";
-                var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-                for (var i = 0; i < 20; i++)
-                    userid += possible.charAt(Math.floor(Math.random() * possible.length));
-                AsyncStorage.setItem('UserId', userid)
-                    .then(() => {return userid})
-                    .catch((error) => {
-                        console.log("ERROR STORING USERID: " + error);
-                        return userid;
-                })
-                return userid;
-            }
-            return result;
-        })
-        .catch((error) => {
-            console.log("ERROR RETRIEVING USERID: " + error);
-            return 'admin';
-        })
-}
+      for (let i = 0; i < 20; i += 1) {
+        userid += possible.charAt(Math.floor(Math.random() * possible.length));
+      }
+      AsyncStorage.setItem('UserId', userid)
+        .then(() => userid)
+        .catch(error => error);
+      return userid;
+    }
+    return result;
+  })
+  .catch(() => 'admin');

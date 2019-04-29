@@ -1,8 +1,7 @@
-import React from 'react';
+import { createStackNavigator } from 'react-navigation';
 import AddItemForm from '../components/AddItemForm';
 import UPCScanner from '../components/UPCScanner';
 import CameraView from '../components/CameraView';
-import { createStackNavigator } from 'react-navigation';
 
 const StackNav = createStackNavigator({
   Form: AddItemForm,
@@ -10,16 +9,15 @@ const StackNav = createStackNavigator({
   Camera: {
     screen: CameraView,
     navigationOptions: {
-      header: null
-    }
-  }
+      header: null,
+    },
+  },
 },
 {
   headerMode: 'none',
   navigationOptions: {
     headerVisible: false,
-  }
-}
-)
+  },
+});
 
 export default StackNav;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import SearchPage from './SearchPage';
 import UPCScanner from '../components/UPCScanner';
@@ -6,35 +5,33 @@ import AddItemPage from './AddItemPage';
 import HomePage from './HomePage';
 import SearchResultsPage from './SearchResultsPage';
 import ShoppingPage from './ShoppingPage';
-import DetailedViewPage from "./DetailedViewPage";
-
-const ICON_SIZE = 25;
+import DetailedViewPage from './DetailedViewPage';
 
 const StackNavigator = createStackNavigator({
   Home: {
-    screen: HomePage
+    screen: HomePage,
   },
   Search: {
-    screen: SearchPage
+    screen: SearchPage,
   },
   SearchResults: {
-    screen: SearchResultsPage
+    screen: SearchResultsPage,
   },
   Shopping: {
-    screen: ShoppingPage
+    screen: ShoppingPage,
   },
   AddItem: {
     screen: AddItemPage,
     navigationOptions: {
-      title: "Add Item"
-    }
+      title: 'Add Item',
+    },
   },
   Details: {
-    screen: DetailedViewPage
+    screen: DetailedViewPage,
   },
   Scan: {
-    screen: UPCScanner
-  }
-})
+    screen: UPCScanner,
+  },
+});
 
 export default createAppContainer(StackNavigator);
