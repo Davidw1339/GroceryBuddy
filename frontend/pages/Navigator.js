@@ -7,6 +7,10 @@ import SearchResultsPage from './SearchResultsPage';
 import ShoppingPage from './ShoppingPage';
 import DetailedViewPage from './DetailedViewPage';
 
+/**
+ * The navigator for the whole app
+ * Controls what screen is rendered for the user
+ */
 const StackNavigator = createStackNavigator({
   Home: {
     screen: HomePage,

@@ -63,7 +63,12 @@ export const addGroceryItem = (formData) => {
   return postToAPI(JSON.stringify(formatGroceryItemAdd(formData)), ROUTE);
 };
 
-
+/**
+ * Returns the nearest stores given lat, long, and mile range
+ * @param {current latitude} latitude
+ * @param {current longitude} longitude
+ * @param {range} miles
+ */
 export const getNearestStores = (latitude, longitude, miles) => {
   const ROUTE = `/search_gps?lat=${latitude.toString()}&long=${longitude.toString()}&miles=${miles.toString()}`;
   return fetch(BACKEND_URL + ROUTE, {
@@ -73,6 +78,10 @@ export const getNearestStores = (latitude, longitude, miles) => {
     .catch(error => error);
 };
 
+/**
+ * Search for an item with a keyword
+ * @param {string} keyword
+ */
 export const searchForItem = (keyword) => {
   const LIMIT = 20;
   const ROUTE = `/search?keyword=${keyword}&limit=${LIMIT}`;
@@ -83,6 +92,10 @@ export const searchForItem = (keyword) => {
     .catch(error => error);
 };
 
+/**
+ * Search for an item with upc code
+ * @param {string} upc
+ */
 export const searchByUPC = (upc) => {
   const ROUTE = `${BACKEND_URL}/search?upc=${upc}`;
   return fetch(ROUTE, { method: 'GET' }).then(res => res.json());

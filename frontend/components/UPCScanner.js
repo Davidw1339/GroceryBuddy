@@ -2,11 +2,19 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo';
 
+/**
+ * Class representing item addition form for adding items.
+ * @extends React.Component
+ */
 export default class ItemAdditionForm extends React.Component {
   static navigationOptions = () => ({
     title: 'Scan Bar Code',
   })
 
+  /**
+   * Creates the ItemAdditionForm
+   * @param {object} props
+   */
   constructor(props) {
     super(props);
 
@@ -20,6 +28,11 @@ export default class ItemAdditionForm extends React.Component {
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
+  /**
+   * Sends the barcode back to the original router
+   * @param  {string} {type - type of barcode
+   * @param  {object} data} - barcode data
+   */
   handleBarCodeScanned = ({ type, data }) => {
     this.props.navigation.goBack();
     this.props.navigation.getParam('handleBarCodeScanned')(type, data);

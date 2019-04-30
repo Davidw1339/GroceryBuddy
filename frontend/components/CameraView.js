@@ -25,17 +25,28 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * Class representing the camera view for taking pictures.
+ * @extends React.Component
+ */
 export default class CameraView extends React.Component {
   state = {
     hasCameraPermission: null,
     type: Camera.Constants.Type.back,
   }
 
+  /**
+   * Asks for permission to use the camera
+   */
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
+  /**
+   * Handles the data routing after the picture is taken
+   * @param  {object} image
+   */
   handlePictureTaken = (image) => {
     // When the image data is returned to us
     // exit the camera view and pass the image back to the main view

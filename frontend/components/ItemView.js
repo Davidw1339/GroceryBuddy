@@ -31,6 +31,10 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * Class representing the item view for more detailed items.
+ * @extends React.Component
+ */
 export default class ItemView extends React.Component {
   static navigationOptions = {
     title: 'Item Details',

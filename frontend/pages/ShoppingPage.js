@@ -60,6 +60,10 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * Class representing shopping page
+ * @extends React.Component
+ */
 export default class ShoppingPage extends React.Component {
     static navigationOptions = ({ navigation }) => {
       const listObj = navigation.getParam('list', { name: 'Shopping Page', store: '' });
@@ -68,6 +72,10 @@ export default class ShoppingPage extends React.Component {
       };
     };
 
+    /**
+     * Constructor for shopping page
+     * @param  {object} props
+     */
     constructor(props) {
       super(props);
       this.state = {
@@ -75,15 +83,27 @@ export default class ShoppingPage extends React.Component {
       };
     }
 
+    /**
+     * Set the user id initially
+     */
     componentDidMount() {
       this.setUserId();
     }
 
+    /**
+     * Fetches the user id from async storage
+     */
     setUserId = async () => {
       const userid = await getUserId();
       this.setState({ username: userid });
     }
 
+    /**
+     * Helper method for displaying vote count
+     * @param  {number} value - original value
+     * @param  {boolean} active - whether user voted on the item
+     * @returns {number} - the new value to show
+     */
     display = (value, active) => {
       if (active) {
         return (value + 1);
@@ -91,6 +111,13 @@ export default class ShoppingPage extends React.Component {
       return value;
     }
 
+    /**
+     * Toggle's the user in the upvote or downvote state
+     * @param  {object} state
+     * @param  {string} arrayName
+     * @param  {object} item
+     * @param  {number} i
+     */
     toggleUserInState = (state, arrayName, item, i) => {
       const newItem = { ...item };
       if (newItem[arrayName] && newItem[arrayName].indexOf(this.state.username) > -1) {
@@ -108,6 +135,11 @@ export default class ShoppingPage extends React.Component {
       return newState;
     }
 
+    /**
+     * Upvote an item asynchronously
+     * @param  {object} item - the item to be upvoted
+     * @param  {number} i - the index of the item
+     */
     upvotePrice = async (item, i) => {
       const { store, lat, long } = this.state.list;
       const storeInfo = {
@@ -130,6 +162,11 @@ export default class ShoppingPage extends React.Component {
       }
     }
 
+    /**
+     * Downvote an item asynchronously
+     * @param  {object} item - the item to be downvoted
+     * @param  {number} i - the index of the item
+     */
     downvotePrice = async (item, i) => {
       const { store, lat, long } = this.state.list;
       const storeInfo = {
@@ -153,6 +190,10 @@ export default class ShoppingPage extends React.Component {
       }
     }
 
+    /**
+     * Renders Shopping Page
+     * @return {View} The shopping page view
+     */
     render() {
       const { list } = this.state;
 

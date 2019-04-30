@@ -18,6 +18,10 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * Class representing the search bar on the SearchPage.
+ * @extends React.Component
+ */
 export default class ItemSearchBar extends React.Component {
   constructor(props) {
     super(props);

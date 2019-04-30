@@ -32,11 +32,19 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * Class representing home page
+ * @extends React.Component
+ */
 export default class HomePage extends React.Component {
     static navigationOptions = {
       title: 'Lists',
     }
 
+    /**
+     * Creates the HomePage
+     * @param {object} props
+     */
     constructor(props) {
       super(props);
       this.state = {
@@ -46,10 +54,16 @@ export default class HomePage extends React.Component {
       };
     }
 
+    /**
+     * Fetches the initial lists
+     */
     componentDidMount() {
       this.retrieveLists();
     }
 
+    /**
+     * Retrieves lists from async stoage
+     */
     retrieveLists = async () => {
       const lists = await getLists();
       this.setState({
@@ -57,12 +71,18 @@ export default class HomePage extends React.Component {
       });
     }
 
-    toggleAddListOverlay = () => { // toggles the overlay/modal for creating new list
+    /**
+     * Toggles the overlay/modal for creating new list
+     */
+    toggleAddListOverlay = () => {
       this.setState(({ listOverlayVisible }) => ({
         listOverlayVisible: !listOverlayVisible,
       }));
     }
 
+    /**
+     * Adds a new list to the set of lists
+     */
     addNewList = async () => {
       this.toggleAddListOverlay(); // close the modal
       this.setState({ newListName: '' }); // clear our the modal input
@@ -70,15 +90,27 @@ export default class HomePage extends React.Component {
       this.retrieveLists(); // refresh the set of lists on the homepage
     }
 
+    /**
+     * Deletes a list from the list page
+     * @param  {number} id - the id of the list
+     */
     deleteList = async (id) => {
       await deleteList(this.state.lists, id);
       this.retrieveLists();
     }
 
+    /**
+     * Launches the search/list page
+     * @param  {string} name - the name of the list
+     */
     launchList = (name) => {
       this.props.navigation.navigate('Search', { name });
     }
 
+    /**
+    * Renders home page.
+    * @return {View} The home page.
+    */
     render() {
       return (
         <View style={styles.container}>

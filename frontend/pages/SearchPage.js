@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   ScrollView, View, StyleSheet, Alert, TouchableNativeFeedback, TouchableHighlight, Platform,
+  ActivityIndicator,
 } from 'react-native';
 import {
   Text, ListItem, Button, Avatar, Icon, Badge,
@@ -38,8 +39,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingTop: 10,
   },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
+/**
+ * Class representing the search or list page
+ * @extends React.Component
+ */
 export default class SearchPage extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.getParam('name', 'Create Shopping List'),
@@ -53,6 +67,10 @@ export default class SearchPage extends React.Component {
     ),
   })
 
+  /**
+   * The constructor for creating a search page
+   * @param {object} props
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -62,6 +80,9 @@ export default class SearchPage extends React.Component {
     };
   }
 
+  /**
+   * Register the refresh function on the header
+   */
   componentDidMount() {
     try {
       this.props.navigation.setParams({ refresh: this.refresh });
@@ -70,7 +91,13 @@ export default class SearchPage extends React.Component {
     }
   }
 
+  /**
+   * Refetches all the data by grabbing upc codes and executing
+   * a upc query on the API. Each item's new data replaces
+   * the old data
+   */
   refresh = async () => {
+    this.setState({ refreshing: true });
     const upcCodes = [];
     if (Object.keys(this.state.stores).length > 0) {
       const firstStoreKey = Object.keys(this.state.stores)[0];
@@ -89,8 +116,13 @@ export default class SearchPage extends React.Component {
         this.addItem(newItems[i]);
       }
     }
+    this.setState({ refreshing: false });
   }
 
+  /**
+   * Adds an item to the list and each shopping page
+   * @param  {object} item - the item to be added
+   */
   addItem = (item) => {
     const newStores = Object.assign({}, this.state.stores) //eslint-disable-line
 
@@ -156,6 +188,10 @@ export default class SearchPage extends React.Component {
     this.setState({ stores: newStores }, () => { this.recalculateTotals(); });
   }
 
+  /**
+   * Calculates the total for a certain store (e.g. County Market)
+   * @param  {string} storeName - the name of the store
+   */
   calculateStoreTotal = (storeName) => {
     const { items } = this.state.stores[storeName];
     let sum = 0;
@@ -165,7 +201,9 @@ export default class SearchPage extends React.Component {
     return sum;
   }
 
-  // choose cheapest store for a particular list and update total
+  /**
+   * Recalculate each store's totals and set the cheapest store accordingly
+   */
   recalculateTotals = () => {
     let cheapestTotal = Number.MAX_VALUE;
     let cheapestStore = '';
@@ -190,7 +228,10 @@ export default class SearchPage extends React.Component {
     });
   }
 
-  // pop up alert asking user if they want to delete an item
+  /**
+   * Pop up an alert asking user if they want to delete an item
+   * @param {number} i - the index of the item to be deleted
+   */
   deleteAlert = (i) => {
     Alert.alert(
       'Delete',
@@ -206,7 +247,10 @@ export default class SearchPage extends React.Component {
     );
   }
 
-  // delete item with index i from shopping list
+  /**
+   * Delete item with index i from shopping list
+   * @param  {number} i - the index of the item to be deleted
+   */
   deleteItem = (i) => {
     const newStores = Object.assign({}, this.state.stores);
     Object.keys(this.state.stores).forEach((store) => {
@@ -223,23 +267,37 @@ export default class SearchPage extends React.Component {
     return promise;
   }
 
+  /**
+   * Navigates to the search results page with the given UPC and keyword
+   * @param  {string} keyword - search parameter to use
+   * @param  {string} upc - search parameter to use
+   */
   submitSearch = async (keyword, upc) => {
     if (!keyword || (keyword && keyword.trim() !== '')) {
       this.props.navigation.navigate('SearchResults', { keyword: keyword.trim(), upc, handleAddItem: this.addItem });
     }
   }
 
-  // This function will be called when a bar code is scanned
-  // simply navigates to search results page
+  /**
+   * This function simply navigates to the search results page
+   * after a barcode is scanned
+   * @param  {string} type - type of barcode
+   * @param  {object} data - barcode data
+   */
   handleBarCodeScanned = (type, data) => {
     this.submitSearch('', data);
   }
 
-  // This function is called when the scan button (camera button) is pressed
+  /**
+   * Called when the user clicks the camera icon to scan a UPC
+   */
   scanBarCode = () => {
     this.props.navigation.navigate('Scan', { handleBarCodeScanned: this.handleBarCodeScanned });
   }
 
+  /**
+   * Launch the shopping page after clicking Finish List
+   */
   launchShopping = () => {
     this.props.navigation.navigate('Shopping', {
       list: {
@@ -252,10 +310,17 @@ export default class SearchPage extends React.Component {
     });
   }
 
+  /**
+   * Opens the compare collapsible
+   */
   _onOpenCompare = () => {
     this.setState(state => ({ isCollapsed: !state.isCollapsed }));
   }
 
+  /**
+   * Renders the Search Page
+   * @return {View} - the rendered search page view
+   */
   render() {
     const TouchablePlatformSpecific = Platform.OS === 'ios'
       ? TouchableHighlight
@@ -360,6 +425,12 @@ export default class SearchPage extends React.Component {
             onPress={this.launchShopping}
           />
         </View>
+        {this.state.refreshing
+          && (
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" />
+          </View>
+          )}
       </View>
     );
   }

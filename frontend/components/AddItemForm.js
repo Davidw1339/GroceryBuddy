@@ -52,6 +52,10 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * Class representing add item form
+ * @extends React.Component
+ */
 export default class AddItemForm extends React.Component {
   constructor(props) {
     super(props);
@@ -70,6 +74,9 @@ export default class AddItemForm extends React.Component {
     };
   }
 
+  /**
+   * Immediately fetches location for user
+   */
   componentDidMount = () => {
     this.getLocationAsync();
   }
@@ -128,6 +135,9 @@ export default class AddItemForm extends React.Component {
     });
   }
 
+  /**
+   * Gets the current device's location
+   */
   getLocationAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
